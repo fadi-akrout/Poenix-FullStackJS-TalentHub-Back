@@ -6,13 +6,15 @@ var logger = require('morgan');
 
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/UserRoute');
+
 
 var evenementsRoutes = require('./routes/EvenementRoute');
 
 var app = express();
 
 app.use('/evenements', evenementsRoutes);
+
 
 //import database
 var mongoose = require('mongoose');
@@ -23,6 +25,7 @@ const connect = mongoose.connect(configDB.mongo.uri);
 
 require('./models/Evenement')
 require('./models/User')
+
 
 
 

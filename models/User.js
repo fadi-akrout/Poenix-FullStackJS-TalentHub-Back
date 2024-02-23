@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+  Id:Number,
   FirstName: String,
   LastName: String,
   PhoneNumber: Number,
@@ -19,15 +20,11 @@ const userSchema = new Schema({
     enum: ['admin', 'recruiter', 'student', 'alumni', 'satff'],
     default: 'user' 
   },
+
+  Diploma: String,
+  LastPostOccupied: String,
+  NbrOfExperience: Number,
   
-  admin: {
-    type: Schema.Types.ObjectId,
-    ref: 'Admin'
-  },
-  recruiter: {
-    type: Schema.Types.ObjectId,
-    ref: 'Recruiter'
-  }
 });
 
 const User = mongoose.model('User', userSchema);
