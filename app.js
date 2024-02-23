@@ -9,10 +9,12 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/UserRoute');
 
 
+var evenementsRoutes = require('./routes/EvenementRoute');
 
 var app = express();
 
-app.use('/', usersRouter);
+app.use('/evenements', evenementsRoutes);
+
 
 //import database
 var mongoose = require('mongoose');
@@ -21,7 +23,14 @@ var configDB = require('./mongodb.json');
 const connect = mongoose.connect(configDB.mongo.uri);
 
 
+require('./models/Evenement')
 require('./models/User')
+
+
+
+
+
+
 
 
 // view engine setup
