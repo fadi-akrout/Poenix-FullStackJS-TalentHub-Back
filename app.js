@@ -24,6 +24,14 @@ require('./models/Evenement')
 require('./models/User')
 
 
+require('./models/candidat')
+require('./models/Evenement')
+require('./models/User')
+require('./models/Admin')
+require('./models/Recruiter')
+
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
