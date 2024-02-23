@@ -11,6 +11,7 @@ var candidatRouter = require('./routes/candidats');
 
 
 
+
 var app = express();
 
 
@@ -19,11 +20,21 @@ var mongoose = require('mongoose');
 var configDB = require('./mongodb.json');
 //mongo config
 const connect = mongoose.connect(configDB.mongo.uri);
+
 require('./models/test')
 
 require('./models/candidat')
 require('./models/Evenement')
 require('./models/User')
+
+
+require('./models/candidat')
+require('./models/Evenement')
+require('./models/User')
+require('./models/Admin')
+require('./models/Recruiter')
+
+
 
 
 
