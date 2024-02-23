@@ -6,11 +6,13 @@ var logger = require('morgan');
 
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/UserRoute');
+
 
 
 var app = express();
 
+app.use('/', usersRouter);
 
 //import database
 var mongoose = require('mongoose');
@@ -18,21 +20,8 @@ var configDB = require('./mongodb.json');
 //mongo config
 const connect = mongoose.connect(configDB.mongo.uri);
 
-require('./models/test')
 
-require('./models/candidat')
-require('./models/Evenement')
 require('./models/User')
-
-
-require('./models/candidat')
-require('./models/Evenement')
-require('./models/User')
-require('./models/Admin')
-require('./models/Recruiter')
-
-
-
 
 
 // view engine setup
@@ -47,6 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
 //app.use('/contacts', contacts);
 
 // catch 404 and forward to error handler
