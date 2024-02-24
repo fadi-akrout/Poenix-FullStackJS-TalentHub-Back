@@ -21,6 +21,12 @@ const userSchema = new Schema({
     default: 'user' 
   },
 
+  active: {
+    type: Boolean,
+    default: true 
+  },
+
+
   Diploma: String,
   LastPostOccupied: String,
   NbrOfExperience: Number,
@@ -29,4 +35,6 @@ const userSchema = new Schema({
 
 const User = mongoose.model('User', userSchema);
 
+
 module.exports = User;
+

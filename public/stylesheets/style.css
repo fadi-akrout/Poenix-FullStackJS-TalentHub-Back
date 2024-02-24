@@ -1,8 +1,21 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-a {
-  color: #00B7FF;
+html {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 2.5rem;
+}
+
+body {
+    min-height: 100vh;
+    background-color: #ff0000;
+    color: whitesmoke;
+    display: grid;
+    place-content: center;
+    padding: 1rem;
 }
