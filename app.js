@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const cors = require('cors');
+
 
 
 var indexRouter = require('./routes/index');
@@ -12,9 +14,18 @@ var usersRouter = require('./routes/UserRoute');
 var evenementsRoutes = require('./routes/EvenementRoute');
 var offersRoutes = require('./routes/OfferRoute')
 var app = express();
+app.use(cors({
+    origin: 'http://localhost:5173' // Autorise seulement l'accès de cette origine
+}));
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.use('/evenements', evenementsRoutes);
-app.use('/offers',offersRoutes)
+app.use('/offers', offersRoutes)
 
 
 //import database
@@ -34,11 +45,7 @@ require('./models/offer')
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'twig');
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.use('/', indexRouter);
 
