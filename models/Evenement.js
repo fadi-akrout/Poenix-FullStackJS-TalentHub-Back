@@ -1,12 +1,14 @@
 const mongoose = require('mongoose');
 
 const EvenementSchema = new mongoose.Schema({
-    nom: String,
-    adresse: String,
-    dateDebut: Date,
-    dateFin: Date,
+    nom: { type: String, required: true },
+    adresse: { type: String, required: true },
+    dateDebut: { type: Date, required: true },
+    dateFin: { type: Date, required: true },
     description: String,
-    image: String,
-});
+    image: String
+}, { timestamps: true }); // Ajoute createdAt et updatedAt automatiquement
 
-module.exports = mongoose.model('Evenement', EvenementSchema);
+// Créer le modèle
+const Evenement = mongoose.model('Evenement', EvenementSchema);
+module.exports = Evenement;
