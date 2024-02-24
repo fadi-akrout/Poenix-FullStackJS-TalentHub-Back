@@ -20,6 +20,7 @@ const userSchema = new Schema({
     enum: ['admin', 'recruiter', 'student', 'alumni', 'satff'],
     default: 'user' 
   },
+
   active: {
     type: Boolean,
     default: true 
@@ -34,4 +35,6 @@ const userSchema = new Schema({
 
 const User = mongoose.model('User', userSchema);
 
+
 module.exports = User;
+
