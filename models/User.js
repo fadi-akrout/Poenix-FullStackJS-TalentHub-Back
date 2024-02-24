@@ -1,11 +1,37 @@
 const mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var User = new Schema({
-    FullName: String,
-    Phone: Number,
-    Adresse: String,
-    CIN: Number
+const userSchema = new Schema({
+  Id:Number,
+  FirstName: String,
+  LastName: String,
+  PhoneNumber: Number,
+  email: {
+    type: String,
+    unique: true,
+    required: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  role: [{
+    type: String,
+    enum: ['admin', 'recruiter', 'student', 'alumni', 'satff'],
+    default: 'user' 
+  }],
+  active: {
+    type: Boolean,
+    default: active 
+  },
+
+
+  Diploma: String,
+  LastPostOccupied: String,
+  NbrOfExperience: Number,
+  
 });
 
-module.exports = mongoose.model('user', User);
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;

@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
-var Schema = mongoose.Schema;
 
-var Evenement = new Schema({
-    FullName: String,
-    Phone: Number,
-    Adresse: String
+const EvenementSchema = new mongoose.Schema({
+    nom: String,
+    adresse: String,
+    dateDebut: Date,
+    dateFin: Date,
+    description: String,
+    image: String,
 });
 
-module.exports = mongoose.model('Evenements', Evenement);
+module.exports = mongoose.model('Evenement', EvenementSchema);
