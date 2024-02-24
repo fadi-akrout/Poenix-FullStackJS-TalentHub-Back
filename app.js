@@ -27,7 +27,7 @@ const connect = mongoose.connect(configDB.mongo.uri);
 
 require('./models/Evenement')
 require('./models/User')
-require('./models/Offer')
+require('./models/offer')
 
 
 // view engine setup
