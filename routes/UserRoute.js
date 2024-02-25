@@ -1,58 +1,60 @@
-var express = require('express');
+/*var express = require('express');
 var router = express.Router();
+//const User = require('../models/User');
+const usersController= require('../controllers/userController')
+
+router.route('/')
+    .get(usersController.getAllUsers)
+    .post(usersController.createNewUser)
+    .patch(usersController.updateUser)
+    .delete(usersController.deleteUser)
+module.exports = router*/
+
+
+
+const express = require('express');
+const router = express.Router();
 const User = require('../models/User');
-const createUser = async (UserData) => {
+
+// Create
+router.post('/', async(req, res) => {
+    const user = new User(req.body);
     try {
-      const User = new User(UserData);
-      const createdUser = await User.save();
-      return createdUser;
-    } catch (error) {
-      throw new Error('Failed to create User.');
+        const savedUser = await user.save();
+        res.status(201).send(savedUser);
+    } catch (err) {
+        res.status(400).send(err);
     }
-  };
-  
-  const getAllUsers = async () => {
+});
+
+// Read
+router.get('/', async(req, res) => {
     try {
-      const Users = await User.find();
-      return Users;
-    } catch (error) {
-      throw new Error('Failed to fetch Users.');
+        const users = await User.find();
+        res.json(users);
+    } catch (err) {
+        res.status(500).send(err);
     }
-  };
-  
-  const getUserById = async (UserId) => {
+});
+
+// Update
+router.patch('/:id', async(req, res) => {
     try {
-      const User = await User.findById(UserId);
-      return User;
-    } catch (error) {
-      throw new Error('Failed to fetch User.');
+        const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json(updatedUser);
+    } catch (err) {
+        res.status(400).send(err);
     }
-  };
-  
-  const updateUser = async (UserId, UserData) => {
+});
+
+// Delete
+router.delete('/:id', async(req, res) => {
     try {
-      const updatedUser = await User.findByIdAndUpdate(UserId, UserData, {
-        new: true,
-      });
-      return updatedUser;
-    } catch (error) {
-      throw new Error('Failed to update User.');
+        await User.findByIdAndDelete(req.params.id);
+        res.status(204).send();
+    } catch (err) {
+        res.status(500).send(err);
     }
-  };
-  
-  const deleteUser = async (UserId) => {
-    try {
-      await User.findByIdAndRemove(UserId);
-      return true;
-    } catch (error) {
-      throw new Error('Failed to delete User.');
-    }
-  };
-  
-  module.exports = {
-    createUser,
-    getAllUsers,
-    getUserById,
-    updateUser,
-    deleteUser,
-  };
+});
+
+module.exports = router;
