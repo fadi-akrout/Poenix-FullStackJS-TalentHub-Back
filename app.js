@@ -16,13 +16,19 @@ var offersRoutes = require('./routes/OfferRoute');
 
 
 require('dotenv').config()
-//const { loggers } = require('./middleware/logger')
+    //const { loggers } = require('./middleware/logger')
 const errorHandler = require('./middleware/errorHandler')
 const corsOptions = require('./config/corsOptions')
-const PORT = process.env.PORT || 3001
+
+const port = process.env.PORT || 3500; // Change 3500 to another port number
 
 console.log(process.env.NODE_ENV)
 var app = express();
+
+app.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+});
+
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors({
@@ -34,10 +40,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var port = process.env.PORT || 3500; // Utilisez le port fourni par l'environnement ou 3500 si aucun port n'est fourni
-app.listen(port, function() {
-    console.log('Server listening on port ' + port);
-});
 
 
 //app.use(logger)
@@ -51,7 +53,7 @@ app.use(cookieParser())
 
 app.use('/evenements', evenementsRoutes);
 app.use('/users', usersRoutes)
-app.use('/api/user',userRoutes)
+app.use('/api/user', userRoutes)
 app.use('/offers', offersRoutes)
 
 
@@ -97,7 +99,8 @@ app.use('/', indexRouter);
  */
 app.use(errorHandler)
 
-//app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+//app.listen(PORT, () => console.log(`Server running on port ${PORT}`))=======
+
 
 
 // catch 404 and forward to error handler
