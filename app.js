@@ -19,6 +19,7 @@ require('dotenv').config()
     //const { loggers } = require('./middleware/logger')
 const errorHandler = require('./middleware/errorHandler')
 const corsOptions = require('./config/corsOptions')
+
 const port = process.env.PORT || 3500; // Change 3500 to another port number
 
 console.log(process.env.NODE_ENV)
@@ -98,6 +99,7 @@ app.use('/', indexRouter);
  */
 app.use(errorHandler)
 
+//app.listen(PORT, () => console.log(`Server running on port ${PORT}`))=======
 
 
 
