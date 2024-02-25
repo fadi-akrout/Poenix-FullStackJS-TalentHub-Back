@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 
 
 var usersRoutes = require('./routes/UserRoute');
@@ -23,6 +24,8 @@ const PORT = process.env.PORT || 3500
 
 console.log(process.env.NODE_ENV)
 var app = express();
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors({
     origin: 'http://localhost:5173' // Autorise seulement l'accès de cette origine
 }));
@@ -31,6 +34,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+var port = process.env.PORT || 3500; // Utilisez le port fourni par l'environnement ou 3500 si aucun port n'est fourni
+app.listen(port, function() {
+    console.log('Server listening on port ' + port);
+});
 
 
 //app.use(logger)
@@ -108,5 +116,7 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
+
+
 
 module.exports = app;
