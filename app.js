@@ -18,9 +18,8 @@ var offersRoutes = require('./routes/OfferRoute');
 require('dotenv').config()
 //const { loggers } = require('./middleware/logger')
 const errorHandler = require('./middleware/errorHandler')
-const cors = require('cors')
 const corsOptions = require('./config/corsOptions')
-const PORT = process.env.PORT || 3500
+const PORT = process.env.PORT || 3001
 
 console.log(process.env.NODE_ENV)
 var app = express();
@@ -98,7 +97,7 @@ app.use('/', indexRouter);
  */
 app.use(errorHandler)
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+//app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
 
 
 // catch 404 and forward to error handler
