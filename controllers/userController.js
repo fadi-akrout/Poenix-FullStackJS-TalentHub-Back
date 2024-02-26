@@ -39,9 +39,27 @@ const signupUser= async(req,res)=>{
     }
 
 }
+//refresh
+const refresh=async(req,res)=> {
+    const token = req.headers['x-access-token'] || req.headers['authorization'];  
+    if (!token) {return res.status(403).send({auth: false, message: 'No token provided.'});}
+
+    let decoded;
+    try{
+       decoded = jwt.verify(token.split(' ')[1], process.env.SECRET_KEY);
+       const user = await User.findById(decoded.id)  
+       const newToken = createToken(user._id, true)  
+       res.header("Authorization", newToken).send(newToken);  
+    } catch (err) { 
+      console.log(err); 
+      res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });  
+    }   
+}
+
 
 module.exports= {
     loginUser, 
-    signupUser
+    signupUser,
+    refresh
 }
     
