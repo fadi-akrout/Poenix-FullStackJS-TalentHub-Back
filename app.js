@@ -55,6 +55,7 @@ app.use('/evenements', evenementsRoutes);
 app.use('/users', usersRoutes)
 app.use('/api/user', userRoutes)
 app.use('/offers', offersRoutes)
+app.use('/auth', require('./routes/UserRoutes'))
 
 
 //import database
