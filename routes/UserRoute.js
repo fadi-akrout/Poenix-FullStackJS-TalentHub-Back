@@ -15,6 +15,9 @@ module.exports = router*/
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const verifyJWT= require('../middleware/verifyJWT')
+router.use(verifyJWT)
+
 
 // Create
 router.post('/', async(req, res) => {
