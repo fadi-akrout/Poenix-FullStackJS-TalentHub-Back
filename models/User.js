@@ -41,6 +41,8 @@ const userSchema = new Schema({
   
 })
 
+
+
 // static signup method ======================
 userSchema.statics.signup = async function(email,password) {
   //validation
@@ -74,6 +76,9 @@ userSchema.statics.signup = async function(email,password) {
     if(!user) {
       throw new Error('Incorrect Email')
     }
+    if(!user.active) {
+      throw new Error('Banned Account')
+    }
     const match= await bcrypt.compare(password, user.password)
     if(!match) {
         throw new Error('Incorrect Password')
@@ -82,7 +87,7 @@ userSchema.statics.signup = async function(email,password) {
     return user;
   }
 // end of static login method ====================== 
-
+//
 
 
 const User = mongoose.model('User', userSchema);

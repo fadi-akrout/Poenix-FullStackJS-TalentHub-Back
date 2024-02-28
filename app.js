@@ -52,9 +52,11 @@ app.use(cookieParser())
 
 app.use('/candidates', CandidateRoutes);
 app.use('/evenements', evenementsRoutes);
-app.use('/users', usersRoutes);
-app.use('/api/user', userRoutes);
-app.use('/offers', offersRoutes);
+
+app.use('/users', usersRoutes)
+app.use('/api/user', userRoutes)
+app.use('/offers', offersRoutes)
+app.use('/auth', require('./routes/UserRoutes'))
 
 
 
