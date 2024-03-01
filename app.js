@@ -70,7 +70,7 @@ const connect = mongoose.connect(configDB.mongo.uri);
 require('./models/Candidate')
 require('./models/Evenement')
 require('./models/User')
-require('./models/offer')
+require('./models/Offer')
 
 
 

@@ -7,7 +7,7 @@ const JobType = {
   };
 
 const OfferSchema = new mongoose.Schema({
-    Offer_Id: Number,
+    Title : String,
     Experience_required: String,
     Domain: String,
     Mission: String,
