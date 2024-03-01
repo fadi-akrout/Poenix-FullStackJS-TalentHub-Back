@@ -4,6 +4,8 @@ const JobType = {
     FULL_TIME: 'Full Time',
     PART_TIME: 'Part Time',
     CONTRACT: 'Contract',
+    SUMMER_INTERNSHIP: 'Summer internship',
+    PFE: 'PFE',
   };
 
 const OfferSchema = new mongoose.Schema({
