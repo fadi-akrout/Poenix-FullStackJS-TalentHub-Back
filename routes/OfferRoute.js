@@ -22,6 +22,13 @@ router.get('/', async(req, res) => {
         res.status(500).send(err);
     }
 });
+router.get('/getoffer/:id', async(req, res) => {
+   
+        const id =req.params.id;
+        Offer.findById({_id:id})
+        .then(offers=>res.json(offers))
+        .catch(err=>res.json(err))
+});
 
 // Update
 router.patch('/:id', async(req, res) => {
