@@ -13,6 +13,7 @@ var userRoutes = require('./routes/UserRoutes');
 var indexRouter = require('./routes/index');
 var evenementsRoutes = require('./routes/EvenementRoute');
 var offersRoutes = require('./routes/OfferRoute');
+var recruitersRoutes = require('./routes/RecruiterRoutes');
 
 
 require('dotenv').config()
@@ -55,6 +56,7 @@ app.use('/evenements', evenementsRoutes);
 app.use('/users', usersRoutes)
 app.use('/api/user', userRoutes)
 app.use('/offers', offersRoutes)
+app.use('/recruiters', recruitersRoutes);
 
 
 //import database
@@ -68,6 +70,7 @@ const connect = mongoose.connect(configDB.mongo.uri);
 require('./models/Evenement')
 require('./models/User')
 require('./models/offer')
+require('./models/Recruiter')
 
 
 // view engine setup
