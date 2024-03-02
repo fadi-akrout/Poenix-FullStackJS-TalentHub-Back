@@ -13,7 +13,11 @@ var userRoutes = require('./routes/UserRoutes');
 var indexRouter = require('./routes/index');
 var evenementsRoutes = require('./routes/EvenementRoute');
 var offersRoutes = require('./routes/OfferRoute');
+
 var recruitersRoutes = require('./routes/RecruiterRoutes');
+
+
+const CandidateRoutes = require('./routes/CandidateRoute');
 
 
 require('dotenv').config()
@@ -51,12 +55,18 @@ app.use(express.json())
 
 app.use(cookieParser())
 
-
+app.use('/candidates', CandidateRoutes);
 app.use('/evenements', evenementsRoutes);
+
 app.use('/users', usersRoutes)
 app.use('/api/user', userRoutes)
 app.use('/offers', offersRoutes)
+
 app.use('/recruiters', recruitersRoutes);
+
+app.use('/auth', require('./routes/UserRoutes'))
+
+
 
 
 //import database
@@ -66,11 +76,16 @@ var configDB = require('./mongodb.json');
 const connect = mongoose.connect(configDB.mongo.uri);
 
 
-
+require('./models/Candidate')
 require('./models/Evenement')
 require('./models/User')
-require('./models/offer')
+
+
 require('./models/Recruiter')
+
+require('./models/Offer')
+
+
 
 
 // view engine setup
