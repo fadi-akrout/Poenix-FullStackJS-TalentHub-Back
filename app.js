@@ -16,7 +16,12 @@ const userModel = require( './models/User' );
 var indexRouter = require('./routes/index');
 var evenementsRoutes = require('./routes/EvenementRoute');
 var offersRoutes = require('./routes/OfferRoute');
+
+var recruitersRoutes = require('./routes/RecruiterRoutes');
+
+
 const CandidateRoutes = require('./routes/CandidateRoute');
+
 
 require('dotenv').config()
     //const { loggers } = require('./middleware/logger')
@@ -65,6 +70,14 @@ app.use('/evenements', evenementsRoutes);
 
 
 
+
+app.use('/recruiters', recruitersRoutes);
+
+
+
+
+
+
 //import database
 var mongoose = require('mongoose');
 var configDB = require('./mongodb.json');
@@ -75,7 +88,14 @@ const connect = mongoose.connect(configDB.mongo.uri);
 require('./models/Candidate')
 require('./models/Evenement')
 ///require('./models/User')
-require('./models/offer')
+
+
+
+require('./models/Recruiter')
+
+require('./models/Offer')
+
+
 
 
 // connexion base sur role

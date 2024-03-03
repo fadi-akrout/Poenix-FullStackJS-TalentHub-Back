@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Offer = require('../models/offer');
+const Offer = require('../models/Offer');
 
 // Create
 router.post('/', async(req, res) => {
@@ -21,6 +21,13 @@ router.get('/', async(req, res) => {
     } catch (err) {
         res.status(500).send(err);
     }
+});
+router.get('/getoffer/:id', async(req, res) => {
+   
+        const id =req.params.id;
+        Offer.findById({_id:id})
+        .then(offers=>res.json(offers))
+        .catch(err=>res.json(err))
 });
 
 // Update
