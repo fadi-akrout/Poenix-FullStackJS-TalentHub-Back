@@ -1,42 +1,42 @@
-/* const express = require('express')
+// /* const express = require('express')
 
-const { loginUser, signupUser,refresh,logout } = require( '../controllers/userController' )
-const loginLimiter = require('../middleware/loginLimiter')
+// const { loginUser, signupUser,refresh,logout } = require( '../controllers/userController' )
+// const loginLimiter = require('../middleware/loginLimiter')
 
-const router = express.Router()
-// login
-// how to use the loginLimiter in this file?
-router.post('/login', loginLimiter,loginUser)
+// const router = express.Router()
+// // login
+// // how to use the loginLimiter in this file?
+// router.post('/login', loginLimiter,loginUser)
 
-// sign up
-router.post('/signup', signupUser)
-// refresh
-router.get('/refresh', refresh)
-//logout
-router.post('/logout', logout)
-
-
+// // sign up
+// router.post('/signup', signupUser)
+// // refresh
+// router.get('/refresh', refresh)
+// //logout
+// router.post('/logout', logout)
 
 
 
-module.exports= router */
 
 
-const express = require('express')
-const router = express.Router()
-const authController = require('../controllers/userController')
-const loginLimiter = require('../middleware/loginLimiter')
+// module.exports= router */
 
-router.route('/')
-    .post(loginLimiter, authController.login)
 
-router.route('/refresh')
-    .get(authController.refresh)
+// const express = require('express')
+// const router = express.Router()
+// const authController = require('../controllers/userController')
+// const loginLimiter = require('../middleware/loginLimiter')
 
-router.route('/logout')
-    .post(authController.logout)
+// router.route('/')
+//     .post(loginLimiter, authController.login)
 
-// sign up
-router.post('/signup', authController.signupUser)
+// router.route('/refresh')
+//     .get(authController.refresh)
 
-module.exports = router
+// router.route('/logout')
+//     .post(authController.logout)
+
+// // sign up
+// router.post('/signup', authController.signupUser)
+
+// module.exports = router

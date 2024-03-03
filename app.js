@@ -5,11 +5,14 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
+const jwt = require("jsonwebtoken");
 
 
-var usersRoutes = require('./routes/UserRoute');
-var userRoutes = require('./routes/UserRoutes');
 
+//var usersRoutes = require('./routes/UserRoute');
+//var userRoutes = require('./routes/UserRoutes');
+const userModel = require( './models/User' ); 
 var indexRouter = require('./routes/index');
 var evenementsRoutes = require('./routes/EvenementRoute');
 var offersRoutes = require('./routes/OfferRoute');
@@ -37,7 +40,9 @@ app.listen(port, () => {
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors({
-    origin: 'http://localhost:5173' // Autorise seulement l'accès de cette origine
+    origin:  ["http://localhost:5173"],
+    methods: ["GET", "POST"],
+    credentials: true
 }));
 app.use(logger('dev'));
 app.use(express.json());
@@ -58,13 +63,17 @@ app.use(cookieParser())
 app.use('/candidates', CandidateRoutes);
 app.use('/evenements', evenementsRoutes);
 
-app.use('/users', usersRoutes)
-app.use('/api/user', userRoutes)
-app.use('/offers', offersRoutes)
+// app.use('/users', usersRoutes)
+// app.use('/api/user', userRoutes)
+ app.use('/offers', offersRoutes)
+// app.use('/auth', require('./routes/UserRoutes'))
+
+
+
 
 app.use('/recruiters', recruitersRoutes);
 
-app.use('/auth', require('./routes/UserRoutes'))
+
 
 
 
@@ -78,7 +87,8 @@ const connect = mongoose.connect(configDB.mongo.uri);
 
 require('./models/Candidate')
 require('./models/Evenement')
-require('./models/User')
+///require('./models/User')
+
 
 
 require('./models/Recruiter')
@@ -88,6 +98,44 @@ require('./models/Offer')
 
 
 
+// connexion base sur role
+app.post('/register', (req, res) => { 
+    const { name, email, password, role } = req.body;
+    const allowedRoles = ['Admin', 'Student', 'Teacher', 'Alumni'];
+    if (!allowedRoles.includes(role)) {
+        return res.status(400).json({ error: 'Invalid role' });
+    }
+
+    bcrypt.hash(password, 10)
+        .then(hash => {
+            userModel.create({ name, email, password: hash, role })
+                .then(user => res.json("Success"))
+                .catch(err => res.json(err))
+        }).catch(err => res.json(err))
+});
+
+
+app.post('/Loginn', (req, res) => {
+    const {email, password} =req.body;
+    userModel.findOne({email: email})
+    .then(user => {
+        if(user) {
+            bcrypt.compare(password, user.password, (err, responce) => {
+                if(responce) {
+                    const token = jwt.sign({email: user.email, role: user.role},
+                        "jwt-secret-key", {expiresIn: '10s'})
+                        res.cookie('token', token)
+                        return res.json({Status: "Success", role: user.role})
+                }else {
+                    return res.json("the password is incorrect")
+                }
+            })
+        } else {
+            return res.json("No record existed")
+        }
+    })
+})
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'twig');
@@ -95,6 +143,11 @@ app.set('view engine', 'twig');
 
 
 app.use('/', indexRouter);
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).render('error'); 
+  });
 
 
 
