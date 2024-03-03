@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-// Define the JobType enumeration
+
 const JobType = {
     FULL_TIME: 'Full Time',
     PART_TIME: 'Part Time',
@@ -15,7 +15,7 @@ const OfferSchema = new mongoose.Schema({
     Speciality: String,
     JobType: {
         type: String,
-        enum: Object.values(JobType), // Specify the allowed values from the JobType enumeration
+        enum: Object.values(JobType),
       },
     JobCity: String,
 
