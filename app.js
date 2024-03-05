@@ -7,6 +7,16 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
+const session = require('express-session');
+const app = express();
+
+
+app.use(session({
+    secret: 'secret', // Change this to a random string
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Set to true if using HTTPS
+}));
 
 
 
@@ -31,7 +41,7 @@ const corsOptions = require('./config/corsOptions')
 const port = process.env.PORT || 3500; // Change 3500 to another port number
 
 console.log(process.env.NODE_ENV)
-var app = express();
+
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
@@ -101,7 +111,7 @@ require('./models/Offer')
 // connexion base sur role
 app.post('/register', (req, res) => { 
     const { name, email, password, role } = req.body;
-    const allowedRoles = ['Admin', 'Student', 'Teacher', 'Alumni'];
+    const allowedRoles = ['Admin','Recruter', 'Student', 'Teacher', 'Alumni'];
     if (!allowedRoles.includes(role)) {
         return res.status(400).json({ error: 'Invalid role' });
     }
@@ -116,25 +126,26 @@ app.post('/register', (req, res) => {
 
 
 app.post('/Loginn', (req, res) => {
-    const {email, password} =req.body;
-    userModel.findOne({email: email})
-    .then(user => {
-        if(user) {
-            bcrypt.compare(password, user.password, (err, responce) => {
-                if(responce) {
-                    const token = jwt.sign({email: user.email, role: user.role},
-                        "jwt-secret-key", {expiresIn: '10s'})
-                        res.cookie('token', token)
-                        return res.json({Status: "Success", role: user.role})
-                }else {
-                    return res.json("the password is incorrect")
-                }
-            })
-        } else {
-            return res.json("No record existed")
-        }
-    })
-})
+    const { email, password } = req.body;
+    userModel.findOne({ email: email })
+        .then(user => {
+            if (user) {
+                bcrypt.compare(password, user.password, (err, response) => {
+                    if (response) {
+                        const token = jwt.sign({ email: user.email, role: user.role }, "jwt-secret-key", { expiresIn: '10s' });
+                        req.session.user = { email: user.email, role: user.role }; // Store user info in session
+                        res.cookie('token', token);
+                        return res.json({ Status: "Success", role: user.role });
+                    } else {
+                        return res.json("the password is incorrect");
+                    }
+                });
+            } else {
+                return res.json("No record existed");
+            }
+        });
+});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
