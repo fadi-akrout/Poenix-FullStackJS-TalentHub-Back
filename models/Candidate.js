@@ -20,7 +20,8 @@ const CandidateSchema = new Schema({
     phoneNumber: { type: String },
     skills: [{ type: String }],
     languages: [{ type: String }],
-    linkedinProfile: { type: String }
+    linkedinProfile: { type: String },
+    profileImage: { type: String } 
 });
 
 const Candidate = mongoose.model('Candidate', CandidateSchema);
