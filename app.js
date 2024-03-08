@@ -16,6 +16,7 @@ const userModel = require( './models/User' );
 var indexRouter = require('./routes/index');
 var evenementsRoutes = require('./routes/EvenementRoute');
 var offersRoutes = require('./routes/OfferRoute');
+var staffRoute = require('./routes/StaffRoute');
 
 var recruitersRoutes = require('./routes/RecruiterRoutes');
 
@@ -41,7 +42,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors({
     origin:  ["http://localhost:5173"],
-    methods: ["GET", "POST","PUT","PATCH","PUT"],
+    methods: ["GET", "POST","PUT","PATCH","PUT","DELETE"],
     credentials: true
 }));
 app.use(logger('dev'));
@@ -62,6 +63,8 @@ app.use(cookieParser())
 
 app.use('/candidates', CandidateRoutes);
 app.use('/evenements', evenementsRoutes);
+app.use('/staff', staffRoute);
+
 
 // app.use('/users', usersRoutes)
 // app.use('/api/user', userRoutes)
@@ -84,6 +87,7 @@ var configDB = require('./mongodb.json');
 //mongo config
 const connect = mongoose.connect(configDB.mongo.uri);
 
+require('./models/Staff')
 
 require('./models/Candidate')
 require('./models/Evenement')
