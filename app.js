@@ -5,24 +5,23 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt');
-const jwt = require("jsonwebtoken");
-const session = require('express-session');
+//const session = require('express-session');
 const app = express();
 
 
-app.use(session({
+
+/* app.use(session({
     secret: 'secret', // Change this to a random string
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false } // Set to true if using HTTPS
 }));
 
+ */
 
-
-//var usersRoutes = require('./routes/UserRoute');
-//var userRoutes = require('./routes/UserRoutes');
-const userModel = require( './models/User' ); 
+var usersRoutes = require('./routes/UserRoute');
+var userRoutes = require('./routes/UserRoutes');
+//const userModel = require( './models/User' ); 
 var indexRouter = require('./routes/index');
 var evenementsRoutes = require('./routes/EvenementRoute');
 var offersRoutes = require('./routes/OfferRoute');
@@ -73,10 +72,10 @@ app.use(cookieParser())
 app.use('/candidates', CandidateRoutes);
 app.use('/evenements', evenementsRoutes);
 
-// app.use('/users', usersRoutes)
-// app.use('/api/user', userRoutes)
+ app.use('/users', usersRoutes)
+ //app.use('/api/user', userRoutes)
  app.use('/offers', offersRoutes)
-// app.use('/auth', require('./routes/UserRoutes'))
+ app.use('/auth', require('./routes/UserRoutes'))
 
 
 
@@ -97,7 +96,7 @@ const connect = mongoose.connect(configDB.mongo.uri);
 
 require('./models/Candidate')
 require('./models/Evenement')
-///require('./models/User')
+require('./models/User')
 
 
 
@@ -108,43 +107,7 @@ require('./models/Offer')
 
 
 
-// connexion base sur role
-app.post('/register', (req, res) => { 
-    const { name, email, password, role } = req.body;
-    const allowedRoles = ['Admin','Recruter', 'Student', 'Teacher', 'Alumni'];
-    if (!allowedRoles.includes(role)) {
-        return res.status(400).json({ error: 'Invalid role' });
-    }
 
-    bcrypt.hash(password, 10)
-        .then(hash => {
-            userModel.create({ name, email, password: hash, role })
-                .then(user => res.json("Success"))
-                .catch(err => res.json(err))
-        }).catch(err => res.json(err))
-});
-
-
-app.post('/Loginn', (req, res) => {
-    const { email, password } = req.body;
-    userModel.findOne({ email: email })
-        .then(user => {
-            if (user) {
-                bcrypt.compare(password, user.password, (err, response) => {
-                    if (response) {
-                        const token = jwt.sign({ email: user.email, role: user.role }, "jwt-secret-key", { expiresIn: '10s' });
-                        req.session.user = { email: user.email, role: user.role }; // Store user info in session
-                        res.cookie('token', token);
-                        return res.json({ Status: "Success", role: user.role });
-                    } else {
-                        return res.json("the password is incorrect");
-                    }
-                });
-            } else {
-                return res.json("No record existed");
-            }
-        });
-});
 
 
 // view engine setup
