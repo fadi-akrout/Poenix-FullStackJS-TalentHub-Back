@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+
 //const session = require('express-session');
 const app = express();
 
@@ -15,7 +16,7 @@ const app = express();
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false } // Set to true if using HTTPS
-}));
+}));*/
 
  */
 
