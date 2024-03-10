@@ -229,7 +229,7 @@ const logout = (req, res) => {
     res.json({ message: 'Cookie cleared' })
 }
 const createToken=(_id) =>{
-    return jwt.sign({_id}, process.env.SECRET, {expiresIn: '10m'})
+    return jwt.sign({_id}, process.env.SECRET, {expiresIn: '10  m'})
   
 }
 
