@@ -38,8 +38,8 @@
 //   }
 
 
- 
-  
+
+
 // })
 
 
@@ -84,7 +84,7 @@
 //     if(!match) {
 //         throw new Error('Incorrect Password')
 //     }
-  
+
 //     return user;
 //   }
 // // end of static login method ====================== 
@@ -99,14 +99,16 @@
 const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  password: String,
-  role: {
-    type: String,
-    enum: ['Admin','Recruter', 'Student', 'Teacher', 'Alumni'],
-    default: 'Student' // Default role is Student if not provided
-  }
+    name: String,
+    email: String,
+    password: String,
+    role: {
+        type: String,
+        enum: ['Admin', 'Recruter', 'Student', 'Teacher', 'Alumni'],
+        default: 'Student'
+    },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
 });
 
 const userModel = mongoose.model("users", userSchema);
