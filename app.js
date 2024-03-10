@@ -7,16 +7,16 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
-const session = require('express-session');
+//const session = require('express-session');
 const app = express();
 
 
-app.use(session({
+/*app.use(session({
     secret: 'secret', // Change this to a random string
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false } // Set to true if using HTTPS
-}));
+}));*/
 
 
 
