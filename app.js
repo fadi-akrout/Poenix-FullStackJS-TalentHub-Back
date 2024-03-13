@@ -1,10 +1,11 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const mongoose = require('mongoose');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+
 
 //const session = require('express-session');
 const app = express();
@@ -18,8 +19,6 @@ const app = express();
     cookie: { secure: false } // Set to true if using HTTPS
 }));*/
 
- */
-
 var usersRoutes = require('./routes/UserRoute');
 var userRoutes = require('./routes/UserRoutes');
 //const userModel = require( './models/User' ); 
@@ -31,7 +30,8 @@ var staffRoute = require('./routes/StaffRoute');
 var recruitersRoutes = require('./routes/RecruiterRoutes');
 
 
-const CandidateRoutes = require('./routes/CandidateRoute');
+const StudentRoutes = require('./routes/StudentRoute');
+const AlumniRoutes = require('./routes/AlumniRoute');
 
 
 require('dotenv').config()
@@ -71,7 +71,8 @@ app.use(express.json())
 
 app.use(cookieParser())
 
-app.use('/candidates', CandidateRoutes);
+app.use('/students', StudentRoutes);
+app.use('/alumnis', AlumniRoutes);
 app.use('/evenements', evenementsRoutes);
 app.use('/staff', staffRoute);
 
@@ -92,14 +93,15 @@ app.use('/recruiters', recruitersRoutes);
 
 
 //import database
-var mongoose = require('mongoose');
+
 var configDB = require('./mongodb.json');
 //mongo config
 const connect = mongoose.connect(configDB.mongo.uri);
 
 require('./models/Staff')
 
-require('./models/Candidate')
+require('./models/Student')
+require('./models/Alumni')
 require('./models/Evenement')
 require('./models/User')
 
@@ -108,6 +110,7 @@ require('./models/User')
 require('./models/Recruiter')
 
 require('./models/Offer')
+
 
 
 
