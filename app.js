@@ -5,18 +5,27 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+
+
+//const session = require('express-session');
 const app = express();
 
 
 
+/* app.use(session({
+    secret: 'secret', // Change this to a random string
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Set to true if using HTTPS
+}));*/
 
-
-//var usersRoutes = require('./routes/UserRoute');
-//var userRoutes = require('./routes/UserRoutes');
-const userModel = require( './models/User' ); 
+var usersRoutes = require('./routes/UserRoute');
+var userRoutes = require('./routes/UserRoutes');
+//const userModel = require( './models/User' ); 
 var indexRouter = require('./routes/index');
 var evenementsRoutes = require('./routes/EvenementRoute');
 var offersRoutes = require('./routes/OfferRoute');
+var staffRoute = require('./routes/StaffRoute');
 
 var recruitersRoutes = require('./routes/RecruiterRoutes');
 
@@ -43,7 +52,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors({
     origin:  ["http://localhost:5173"],
-    methods: ["GET", "POST","PATCH", "DELETE"],
+    methods: ["GET", "POST","PUT","PATCH","PUT","DELETE"],
     credentials: true
 }));
 app.use(logger('dev'));
@@ -65,11 +74,13 @@ app.use(cookieParser())
 app.use('/students', StudentRoutes);
 app.use('/alumnis', AlumniRoutes);
 app.use('/evenements', evenementsRoutes);
+app.use('/staff', staffRoute);
 
-// app.use('/users', usersRoutes)
-// app.use('/api/user', userRoutes)
+
+ app.use('/users', usersRoutes)
+ //app.use('/api/user', userRoutes)
  app.use('/offers', offersRoutes)
-// app.use('/auth', require('./routes/UserRoutes'))
+ app.use('/auth', require('./routes/UserRoutes'))
 
 
 
@@ -87,11 +98,12 @@ var configDB = require('./mongodb.json');
 //mongo config
 const connect = mongoose.connect(configDB.mongo.uri);
 
+require('./models/Staff')
 
 require('./models/Student')
 require('./models/Alumni')
 require('./models/Evenement')
-///require('./models/User')
+require('./models/User')
 
 
 
@@ -102,6 +114,11 @@ require('./models/Offer')
 
 
 
+
+
+
+
+// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'twig');
 
