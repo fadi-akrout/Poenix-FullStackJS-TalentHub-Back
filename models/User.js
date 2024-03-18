@@ -5,8 +5,9 @@
 
 
 const userSchema = new Schema({
-  Id:Number,
-  name: String,
+  username: {
+    type: String
+  },
   email: {
          type: String, 
          required: true,
@@ -16,11 +17,11 @@ const userSchema = new Schema({
              type: String,
              required: true
            },
-           roles: {
+           roles: [{
                  type: String,
                  enum: ['Admin','Recruter', 'Student', 'Teacher', 'Alumni'],
                 default: 'Student' // Default role is Student if not provided
-             },
+             }],
              active: {
                    type: Boolean,
                    default: true 
@@ -28,7 +29,7 @@ const userSchema = new Schema({
 })
 
 
-
+ 
 // static signup method ======================
 userSchema.statics.signup = async function(email,password) {
   //validation
@@ -74,7 +75,7 @@ userSchema.statics.signup = async function(email,password) {
   }
 // end of static login method ====================== 
 //
-
+ 
 
 const User = mongoose.model('User', userSchema);
 
