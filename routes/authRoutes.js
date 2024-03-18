@@ -1,6 +1,6 @@
-/* const express = require('express')
+const express = require('express')
 const router = express.Router()
-const authController = require('../controllers/userController')
+const authController = require('../controllers/authController')
 const loginLimiter = require('../middleware/loginLimiter')
 
 router.route('/')
@@ -15,4 +15,4 @@ router.route('/logout')
 // sign up
 router.post('/signup', authController.signupUser)
 
-module.exports = router */
+module.exports = router
