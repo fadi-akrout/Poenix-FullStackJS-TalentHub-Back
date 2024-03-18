@@ -5,6 +5,11 @@ var cookieParser = require('cookie-parser');
 const { logger, logEvents } = require('./middleware/logger')
 const cors = require('cors');
 const bodyParser = require('body-parser'); 
+
+const mongoose = require('mongoose');
+
+
+
 //const session = require('express-session');
 const app = express();
 
@@ -15,9 +20,7 @@ const app = express();
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false } // Set to true if using HTTPS
-}));
-
- */
+}));*/
 
 var usersRoutes = require('./routes/UserRoute');
 var userRoutes = require('./routes/UserRoutes');
@@ -25,11 +28,13 @@ var userRoutes = require('./routes/UserRoutes');
 var indexRouter = require('./routes/index');
 var evenementsRoutes = require('./routes/EvenementRoute');
 var offersRoutes = require('./routes/OfferRoute');
+var staffRoute = require('./routes/StaffRoute');
 
 var recruitersRoutes = require('./routes/RecruiterRoutes');
 
 
-const CandidateRoutes = require('./routes/CandidateRoute');
+const StudentRoutes = require('./routes/StudentRoute');
+const AlumniRoutes = require('./routes/AlumniRoute');
 
 
 require('dotenv').config()
@@ -50,7 +55,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors({
     origin:  ["http://localhost:5173"],
-    methods: ["GET", "POST","PUT","PATCH","PUT"],
+    methods: ["GET", "POST","PUT","PATCH","PUT","DELETE"],
     credentials: true
 }));
 /* app.use(logger('dev'));
@@ -69,8 +74,11 @@ app.use(express.json())
 
 app.use(cookieParser())
 
-app.use('/candidates', CandidateRoutes);
+app.use('/students', StudentRoutes);
+app.use('/alumnis', AlumniRoutes);
 app.use('/evenements', evenementsRoutes);
+app.use('/staff', staffRoute);
+
 
  //app.use('/users', usersRoutes)
  //app.use('/api/user', userRoutes)
@@ -87,13 +95,15 @@ app.use('/recruiters', recruitersRoutes);
 
 
 //import database
-var mongoose = require('mongoose');
+
 var configDB = require('./mongodb.json');
 //mongo config
 const connect = mongoose.connect(configDB.mongo.uri);
 
+require('./models/Staff')
 
-require('./models/Candidate')
+require('./models/Student')
+require('./models/Alumni')
 require('./models/Evenement')
 require('./models/User')
 
@@ -108,6 +118,7 @@ require('./models/Offer')
 
 
 /* 
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
