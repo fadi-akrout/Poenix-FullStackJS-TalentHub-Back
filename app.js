@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 const { logger, logEvents } = require('./middleware/logger')
 const cors = require('cors');
+const corsOptions = require('./config/corsOptions')
+
 const bodyParser = require('body-parser'); 
 
 const mongoose = require('mongoose');
@@ -12,7 +14,15 @@ const mongoose = require('mongoose');
 
 //const session = require('express-session');
 const app = express();
-
+/* app.use(cors({
+    origin:  ["http://localhost:5173"],
+    methods: ["GET", "POST","PUT","PATCH","DELETE"],
+    credentials: true,
+    methodsDisallowedByPreflightResponse: function(req, res) {
+        // If the requested method is not allowed, send a 405 Method Not Allowed response
+        res.status(405).send('Method Not Allowed');}
+}));  */
+app.use(cors(corsOptions))
 
 
 /* app.use(session({
@@ -40,7 +50,6 @@ const AlumniRoutes = require('./routes/AlumniRoute');
 require('dotenv').config()
     //const { loggers } = require('./middleware/logger')
 const errorHandler = require('./middleware/errorHandler')
-const corsOptions = require('./config/corsOptions')
 
 const port = process.env.PORT || 3500; // Change 3500 to another port number
 
@@ -51,24 +60,18 @@ app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
 
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-app.use(cors({
-    origin:  ["http://localhost:5173"],
-    methods: ["GET", "POST","PUT","PATCH","PUT","DELETE"],
-    credentials: true
-}));
-/* app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+//app.use(bodyParser.json({ limit: '50mb' }));
+//app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
- */
+//app.use(logger('dev'));
+//app.use(express.urlencoded({ extended: false }));
+//app.use(express.static(path.join(__dirname, 'public')));
+
+
+
 
 app.use(logger)
 
-app.use(cors(corsOptions))
 
 app.use(express.json())
 
