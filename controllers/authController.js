@@ -32,7 +32,9 @@ const login = asyncHandler(async (req, res) => {
         {
             "UserInfo": {
                 "email": foundUser.email,
-                "roles": foundUser.roles
+                "roles": foundUser.roles,
+                "username": foundUser.username,
+
             }
         },
         process.env.SECRET,
@@ -81,7 +83,9 @@ const refresh = (req, res) => {
                 {
                     "UserInfo": {
                         "email": foundUser.email,
-                        "roles": foundUser.roles
+                        "roles": foundUser.roles,
+                        "username": foundUser.username,
+
                     }
                 },
                 process.env.SECRET,
@@ -108,36 +112,35 @@ const createToken=(_id) =>{
 }
 
 //sign up
-const signupUser= async(req,res)=>{
-    const {email, password} = req.body
-    try{
-        const user = await User.signup(email,password)
-        
-        //create token
-        const token = createToken(user._id)
-        const foundUser = await User.findOne({ email }).exec()
+const signupUser = asyncHandler(async (req, res) => {
+    const { username,email, password, roles,active } = req.body
 
-    
-        const refreshToken = jwt.sign(
-            { "email": foundUser.email },
-            process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: '7d' }
-        )
-    
-        // Create secure cookie with refresh token 
-        res.cookie('jwt', refreshToken, {
-            httpOnly: true, //accessible only by web server 
-            secure: true, //https
-             //cross-site cookie 
-            maxAge: 7 * 24 * 60 * 60 * 1000 //cookie expiry: set to match rT
-        })
-
-        res.status(200).json({email, token})
-    }catch(error){
-        return res.status(400).json({message: error.message})
+    // Confirm data
+    if (!email || !password || !Array.isArray(roles) || !roles.length) {
+        return res.status(400).json({ message: 'All fields are required' })
     }
 
-}
+    // Check for duplicate username
+    const duplicate = await User.findOne({ email }).lean().exec()
+
+    if (duplicate) {
+        return res.status(409).json({ message: 'Duplicate email' })
+    }
+
+    // Hash password 
+    const hashedPwd = await bcrypt.hash(password, 10) // salt rounds
+
+    const userObject = { username,email, "password": hashedPwd, roles,active }
+
+    // Create and store new user 
+    const user = await User.create(userObject)
+
+    if (user) { //created 
+        res.status(201).json({ message: `New user ${username} created` })
+    } else {
+        res.status(400).json({ message: 'Invalid user data received' })
+    }
+})
 
 
 // @desc Create new user
