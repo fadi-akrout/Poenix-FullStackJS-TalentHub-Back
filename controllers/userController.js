@@ -120,7 +120,7 @@ const signupUser= async(req,res)=>{
     
         const refreshToken = jwt.sign(
             { "email": foundUser.email },
-            process.env.REFRESH_TOKEN_SECRET,
+            process.env.REFRESH_TOKEN_SECRET, 
             { expiresIn: '7d' }
         )
     
