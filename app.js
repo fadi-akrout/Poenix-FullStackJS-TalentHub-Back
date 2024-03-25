@@ -1,8 +1,12 @@
+require('dotenv').config()
+require('express-async-errors')
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 const { logger, logEvents } = require('./middleware/logger')
+const errorHandler = require('./middleware/errorHandler')
 const cors = require('cors');
 const corsOptions = require('./config/corsOptions')
 
@@ -14,15 +18,16 @@ const mongoose = require('mongoose');
 
 //const session = require('express-session');
 const app = express();
-/* app.use(cors({
+ app.use(cors({
     origin:  ["http://localhost:5173"],
-    methods: ["GET", "POST","PUT","PATCH","DELETE"],
+    methods: ["GET", "PUT","DELETE","PATCH","POST"],
     credentials: true,
-    methodsDisallowedByPreflightResponse: function(req, res) {
-        // If the requested method is not allowed, send a 405 Method Not Allowed response
-        res.status(405).send('Method Not Allowed');}
-}));  */
-app.use(cors(corsOptions))
+  
+})); 
+//app.use(cors(corsOptions))
+
+//app.options('*', cors());
+
 
 
 /* app.use(session({
@@ -47,9 +52,7 @@ const StudentRoutes = require('./routes/StudentRoute');
 const AlumniRoutes = require('./routes/AlumniRoute');
 
 
-require('dotenv').config()
     //const { loggers } = require('./middleware/logger')
-const errorHandler = require('./middleware/errorHandler')
 
 const port = process.env.PORT || 3500; // Change 3500 to another port number
 
