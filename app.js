@@ -1,13 +1,32 @@
+require('dotenv').config()
+require('express-async-errors')
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const { logger, logEvents } = require('./middleware/logger')
+const errorHandler = require('./middleware/errorHandler')
 const cors = require('cors');
-const bodyParser = require('body-parser');
+const corsOptions = require('./config/corsOptions')
+
+const bodyParser = require('body-parser'); 
+
+const mongoose = require('mongoose');
+
+
 
 //const session = require('express-session');
 const app = express();
+ app.use(cors({
+    origin:  ["http://localhost:5173"],
+    methods: ["GET", "PUT","DELETE","PATCH","POST"],
+    credentials: true,
+  
+})); 
+//app.use(cors(corsOptions))
+
+//app.options('*', cors());
 
 
 
@@ -17,7 +36,6 @@ const app = express();
     saveUninitialized: true,
     cookie: { secure: false } // Set to true if using HTTPS
 }));*/
-
 
 var usersRoutes = require('./routes/UserRoute');
 var userRoutes = require('./routes/UserRoutes');
@@ -30,13 +48,11 @@ var staffRoute = require('./routes/StaffRoute');
 var recruitersRoutes = require('./routes/RecruiterRoutes');
 
 
-const CandidateRoutes = require('./routes/CandidateRoute');
+const StudentRoutes = require('./routes/StudentRoute');
+const AlumniRoutes = require('./routes/AlumniRoute');
 
 
-require('dotenv').config()
     //const { loggers } = require('./middleware/logger')
-const errorHandler = require('./middleware/errorHandler')
-const corsOptions = require('./config/corsOptions')
 
 const port = process.env.PORT || 3500; // Change 3500 to another port number
 
@@ -47,38 +63,32 @@ app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
 
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-app.use(cors({
-    origin:  ["http://localhost:5173"],
-    methods: ["GET", "POST","PUT","PATCH","PUT","DELETE"],
-    credentials: true
-}));
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+//app.use(bodyParser.json({ limit: '50mb' }));
+//app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
+//app.use(logger('dev'));
+//app.use(express.urlencoded({ extended: false }));
+//app.use(express.static(path.join(__dirname, 'public')));
 
 
 
-//app.use(logger)
 
-app.use(cors(corsOptions))
+app.use(logger)
+
 
 app.use(express.json())
 
 app.use(cookieParser())
 
-app.use('/candidates', CandidateRoutes);
+app.use('/students', StudentRoutes);
+app.use('/alumnis', AlumniRoutes);
 app.use('/evenements', evenementsRoutes);
 app.use('/staff', staffRoute);
 
 
- app.use('/users', usersRoutes)
+ //app.use('/users', usersRoutes)
  //app.use('/api/user', userRoutes)
  app.use('/offers', offersRoutes)
- app.use('/auth', require('./routes/UserRoutes'))
 
 
 
@@ -91,14 +101,15 @@ app.use('/recruiters', recruitersRoutes);
 
 
 //import database
-var mongoose = require('mongoose');
+
 var configDB = require('./mongodb.json');
 //mongo config
 const connect = mongoose.connect(configDB.mongo.uri);
 
 require('./models/Staff')
 
-require('./models/Candidate')
+require('./models/Student')
+require('./models/Alumni')
 require('./models/Evenement')
 require('./models/User')
 
@@ -112,6 +123,7 @@ require('./models/Offer')
 
 
 
+/* 
 
 
 // view engine setup
@@ -127,31 +139,32 @@ app.use((err, req, res, next) => {
     res.status(500).render('error'); 
   });
 
-
-
-
-//app.use('/', express.static(path.join(__dirname, 'public')))
-
-//app.use('/', require('./routes/root'))
-
-
-/* app.all('*', (req, res) => {
-    res.status(404)
-    if (req.accepts('html')) {
-        res.sendFile(path.join(__dirname, 'views', '404.html'))
-    } else if (req.accepts('json')) {
-        res.json({ message: '404 Not Found' })
-    } else {
-        res.type('txt').send('404 Not Found')
-    }
-})
  */
+
+  app.use('/', express.static(path.join(__dirname, 'public')))
+
+  app.use('/', require('./routes/root'))
+  app.use('/users', require('./routes/UserRoute'))
+  app.use('/notes', require('./routes/noteRoutes'))
+  app.use('/auth', require('./routes/authRoutes'))
+
+  
+  app.all('*', (req, res) => {
+      res.status(404)
+      if (req.accepts('html')) {
+          res.sendFile(path.join(__dirname, 'views', '404.html'))
+      } else if (req.accepts('json')) {
+          res.json({ message: '404 Not Found' })
+      } else {
+          res.type('txt').send('404 Not Found')
+      }
+  })
+  
+
+
 app.use(errorHandler)
 
-//app.listen(PORT, () => console.log(`Server running on port ${PORT}`))=======
-
-
-
+/* 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));
@@ -168,6 +181,12 @@ app.use(function(err, req, res, next) {
     res.render('error');
 });
 
-
+*/
 
 module.exports = app;
+
+
+
+
+
+
