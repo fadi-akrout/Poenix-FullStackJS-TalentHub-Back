@@ -11,22 +11,27 @@ const userSchema = new Schema({
   email: {
          type: String, 
          required: true,
-         unique: true
+        // unique: true
        },
-       password: {
-             type: String,
-             required: true
-           },
-           roles: [{
-                 type: String,
-                 enum: ['Admin','Recruter', 'Student', 'Teacher', 'Alumni'],
-                default: 'Student' // Default role is Student if not provided
-             }],
-             active: {
-                   type: Boolean,
-                   default: true 
-                 }
-})
+  password: {
+      type: String,
+      required: true
+    },
+  roles: {
+      type: [String],
+      // enum: ['Admin','Recruter', 'Student', 'Teacher', 'Alumni'],
+      default: ["Student"] // Default role is Student if not provided
+      },
+  active: {
+      type: Boolean,
+      default: true 
+        },
+  verified:{
+    type: Boolean,
+    required:true,
+    default: false
+  }
+                 })
 
 
  
