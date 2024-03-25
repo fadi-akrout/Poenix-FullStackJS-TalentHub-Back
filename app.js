@@ -18,7 +18,6 @@ const app = express();
     cookie: { secure: false } // Set to true if using HTTPS
 }));*/
 
- */
 
 var usersRoutes = require('./routes/UserRoute');
 var userRoutes = require('./routes/UserRoutes');
