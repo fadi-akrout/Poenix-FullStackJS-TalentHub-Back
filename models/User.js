@@ -222,6 +222,9 @@ userSchema.statics.signup = async function(email,password) {
   }
 // end of static login method ====================== 
 //
+userSchema.methods.comparePassword= async function(password){
+  return await bcrypt.compareSync(password,this.password)
+}
  
 >>>>>>> 1116c86ce88a5c4201971b889287e5c20be6790f
 
