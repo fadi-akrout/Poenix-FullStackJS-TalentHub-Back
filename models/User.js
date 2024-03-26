@@ -80,6 +80,9 @@ userSchema.statics.signup = async function(email,password) {
   }
 // end of static login method ====================== 
 //
+userSchema.methods.comparePassword= async function(password){
+  return await bcrypt.compareSync(password,this.password)
+}
  
 
 const User = mongoose.model('User', userSchema);
