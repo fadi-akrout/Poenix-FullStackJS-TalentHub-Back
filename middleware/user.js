@@ -12,7 +12,7 @@ exports.isResetTokenValid= async(req,res,next)=>{
        let user = await User.findById(id)    ;
        if(!user)
            return res.status(400).json({error:'The user with the given Id does not exist.'})
-       //Checking if token matches the one in DB and it's not expired
+       //Checking if token matches the one in DB and it's not expiredd
       const resetToken= await ResetToken.findOne({owner: user._id});
       if (!resetToken)
           return res.status(400).send({ error: 'Reset Token not found.' });
