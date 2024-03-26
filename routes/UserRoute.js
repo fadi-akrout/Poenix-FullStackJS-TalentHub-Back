@@ -1,17 +1,19 @@
-/*var express = require('express');
+ var express = require('express');
 var router = express.Router();
 //const User = require('../models/User');
 const usersController= require('../controllers/userController')
+const verifyJWT = require('../middleware/verifyJWT')
 
+router.use(verifyJWT)
 router.route('/')
     .get(usersController.getAllUsers)
     .post(usersController.createNewUser)
     .patch(usersController.updateUser)
     .delete(usersController.deleteUser)
-module.exports = router*/
+module.exports = router
 
 
-
+/* 
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
@@ -60,4 +62,4 @@ router.delete('/:id', async(req, res) => {
     }
 });
 
-module.exports = router;
+module.exports = router; */
