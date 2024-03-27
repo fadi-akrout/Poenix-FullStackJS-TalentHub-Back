@@ -254,7 +254,7 @@ const forgotPassword =  async (req, res) => {
       from: `"Forgot Password" <forgotpassworl@example.com>`, 
       subject: "Reset your password",
       text: `Hello,\n\nYou are receiving this because you (or someone else) have requested the reset of the password for your account`,  
-      html: generatePasswordResetTemplate(`http://localhost:5173/reset-password?token=${newtoken}&id=${user._id}`),
+      html: generatePasswordResetTemplate(`http://localhost:5173/dash/reset-password?token=${newtoken}&id=${user._id}`),
    });
 
    res.status(200).json({message:"Check Your Email To Continue"});
@@ -283,7 +283,7 @@ const resetPassword =  async (req, res) => {
         text: `Hello,\n\nYou are receiving this because you (or someone else) have requested the reset of the password for your account`,  
         html:plainEmailTemplate("Password Reset Successfully","Now you can login with new password!"),
      });
-     res.status(200).json({message:'Password has been changed'});
+     res.status(200).json({message:'Password has been changed', success: true});
 
 }
    
