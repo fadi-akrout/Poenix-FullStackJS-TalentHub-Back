@@ -10,7 +10,7 @@ const errorHandler = require('./middleware/errorHandler')
 const cors = require('cors');
 const corsOptions = require('./config/corsOptions')
 
-const bodyParser = require('body-parser'); 
+const bodyParser = require('body-parser');
 
 const mongoose = require('mongoose');
 
@@ -18,12 +18,12 @@ const mongoose = require('mongoose');
 
 //const session = require('express-session');
 const app = express();
- app.use(cors({
-    origin:  ["http://localhost:5173"],
-    methods: ["GET", "PUT","DELETE","PATCH","POST"],
+app.use(cors({
+    origin: ["http://localhost:5173"],
+    methods: ["GET", "PUT", "DELETE", "PATCH", "POST"],
     credentials: true,
-  
-})); 
+
+}));
 //app.use(cors(corsOptions))
 
 //app.options('*', cors());
@@ -52,7 +52,7 @@ const StudentRoutes = require('./routes/StudentRoute');
 const AlumniRoutes = require('./routes/AlumniRoute');
 
 
-    //const { loggers } = require('./middleware/logger')
+//const { loggers } = require('./middleware/logger')
 
 const port = process.env.PORT || 3500; // Change 3500 to another port number
 
@@ -63,8 +63,8 @@ app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
 
-//app.use(bodyParser.json({ limit: '50mb' }));
-//app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 //app.use(logger('dev'));
 //app.use(express.urlencoded({ extended: false }));
@@ -86,9 +86,9 @@ app.use('/evenements', evenementsRoutes);
 app.use('/staff', staffRoute);
 
 
- //app.use('/users', usersRoutes)
- //app.use('/api/user', userRoutes)
- app.use('/offers', offersRoutes)
+//app.use('/users', usersRoutes)
+//app.use('/api/user', userRoutes)
+app.use('/offers', offersRoutes)
 
 
 
@@ -141,25 +141,25 @@ app.use((err, req, res, next) => {
 
  */
 
-  app.use('/', express.static(path.join(__dirname, 'public')))
+app.use('/', express.static(path.join(__dirname, 'public')))
 
-  app.use('/', require('./routes/root'))
-  app.use('/users', require('./routes/UserRoute'))
-  app.use('/notes', require('./routes/noteRoutes'))
-  app.use('/auth', require('./routes/authRoutes'))
+app.use('/', require('./routes/root'))
+app.use('/users', require('./routes/UserRoute'))
+app.use('/notes', require('./routes/noteRoutes'))
+app.use('/auth', require('./routes/authRoutes'))
 
-  
-  app.all('*', (req, res) => {
-      res.status(404)
-      if (req.accepts('html')) {
-          res.sendFile(path.join(__dirname, 'views', '404.html'))
-      } else if (req.accepts('json')) {
-          res.json({ message: '404 Not Found' })
-      } else {
-          res.type('txt').send('404 Not Found')
-      }
-  })
-  
+
+app.all('*', (req, res) => {
+    res.status(404)
+    if (req.accepts('html')) {
+        res.sendFile(path.join(__dirname, 'views', '404.html'))
+    } else if (req.accepts('json')) {
+        res.json({ message: '404 Not Found' })
+    } else {
+        res.type('txt').send('404 Not Found')
+    }
+})
+
 
 
 app.use(errorHandler)
@@ -184,9 +184,3 @@ app.use(function(err, req, res, next) {
 */
 
 module.exports = app;
-
-
-
-
-
-
