@@ -1,10 +1,12 @@
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { generateOTP, mailTransport } = require('../utils/mail')
+const { generateOTP, mailTransport, createRandomBytes, generatePasswordResetTemplate, plainEmailTemplate } = require('../utils/mail')
 const VerificationToken = require('../models/verificationToken')
 const { isValidObjectId } = require('mongoose')
-
+const ResetToken = require('../models/resetToken')
+const crypto = require('crypto')
+const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@!#$%])[A-Za-z\d@!#$%]{8,}$/
 
 // @desc Login
 // @route POST /auth
@@ -231,6 +233,62 @@ const verifyEmail =  async (req, res) => {
 
 }
 
+const forgotPassword =  async (req, res) => {
+    const {email} =req.body;
+    if(!email) return    res.status(400).json({ message: "Missing email in the request!" });
+
+    let user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: "No user found with that email." });
+
+   const token = await ResetToken.findOne({ owner : user._id }) ;   
+   if (token)  return res.status(400).json({ message: "Please wait at least  5 min before trying again" });
+    
+    const newtoken = await createRandomBytes()
+    const resetToken = new ResetToken({ owner: user._id , token: newtoken });
+    await resetToken.save();
+
+        // If token is created less than  5 minutes ago, show it again.
+      
+    mailTransport().sendMail({
+      to: user.email,    
+      from: `"Forgot Password" <forgotpassworl@example.com>`, 
+      subject: "Reset your password",
+      text: `Hello,\n\nYou are receiving this because you (or someone else) have requested the reset of the password for your account`,  
+      html: generatePasswordResetTemplate(`http://localhost:5173/dash/reset-password?token=${newtoken}&id=${user._id}`),
+   });
+
+   res.status(200).json({message:"Check Your Email To Continue"});
+    
+}
+
+const resetPassword =  async (req, res) => {
+    const { password }= req.body;
+    const user= await User.findById(req.user._id)
+    if(!user)    return res.status(400).json({ message: "User not Found" });
+    const isSamePassword =await user.comparePassword(password)
+    if(isSamePassword )return res.status(400).json({ message: "New password cannot be same as old one" });
+
+    if(!PWD_REGEX.test(password)) return res.status(400).json({ message: `The password must contain at least 8 characters,1number,1min,1maj,1special`})
+
+    const hashedPwd = await bcrypt.hash(password, 10) // salt rounds
+    user.password = hashedPwd
+    await user.save()
+
+    await ResetToken.findOneAndDelete({owner: user._id})
+
+    mailTransport().sendMail({
+        to: user.email,    
+        from: `"Reset Password" <resetpassworl@example.com>`, 
+        subject: "Password Reset Successfully ",
+        text: `Hello,\n\nYou are receiving this because you (or someone else) have requested the reset of the password for your account`,  
+        html:plainEmailTemplate("Password Reset Successfully","Now you can login with new password!"),
+     });
+     res.status(200).json({message:'Password has been changed', success: true});
+
+}
+   
+
+
 
 
 module.exports = {
@@ -239,7 +297,9 @@ module.exports = {
     logout,
     signupUser,
     createNewUserSignup,
-    verifyEmail
+    verifyEmail,
+    forgotPassword,
+    resetPassword
 }
 
 
