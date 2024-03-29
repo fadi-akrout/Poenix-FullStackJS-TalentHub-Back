@@ -21,15 +21,18 @@ const login = async (req, res) => {
     const foundUser = await User.findOne({ email }).exec()
 
     if (!foundUser) {
-        return res.status(401).json({ message: 'Unauthorized' })
+        return res.status(404).json({ message: 'User not found' })
     }
     if(!foundUser.active){
         return res.status(403).json({message:'This account has been deactivated by the adminstrator'})
     }
+    if(!foundUser.verified){
+        return res.status(402).json({message:'This account must be activated'})
+    }
 
     const match = await bcrypt.compare(password, foundUser.password)
 
-    if (!match) return res.status(401).json({ message: 'Unauthorized' })
+    if (!match) return res.status(401).json({ message: 'Wrong password' })
 
     const accessToken = jwt.sign(
         {
@@ -157,7 +160,9 @@ const signupUser = async (req, res) => {
         });
 
 
-        res.status(201).json({ message: `New user ${username} created` })
+        res.status(201).json({ message: `New user ${username} created`,  userId: user._id})
+
+
     } else {
         res.status(400).json({ message: 'Invalid user data received' })
     }
@@ -198,11 +203,12 @@ const createNewUserSignup = async (req, res) => {
 }
 
 const verifyEmail =  async (req, res) => {
-    const {userId, otp} = req.body
+    const { userId } = req.params;
+    const {otp} = req.body
     if(!userId||!otp.trim()) return res.status(401).json({ message: 'Invalid request, missing paremeters!' })
 
     if(!isValidObjectId(userId)) return  res.status(400).send('Invalid ID')
-    
+    try {
     let user = await User.findById(userId)
     if(!user) return res.status(404).json({message:"No account with this userID exists"})
 
@@ -229,6 +235,18 @@ const verifyEmail =  async (req, res) => {
     html:  `<h1>Email Verified Successfully thanks for connecting with us</h1>`,
    
 });
+res.json({
+    success:true,
+    user : {
+    name:  user.username,
+    email: user.email,
+    id: user._id,
+    verified: user.verified },
+})
+} catch (error) {
+    console.error("Error occurred:", error);
+        return res.status(500).json({ message: 'An error occurred while verifying email.', error: error.message });
+    }
 
 
 }
@@ -254,38 +272,46 @@ const forgotPassword =  async (req, res) => {
       from: `"Forgot Password" <forgotpassworl@example.com>`, 
       subject: "Reset your password",
       text: `Hello,\n\nYou are receiving this because you (or someone else) have requested the reset of the password for your account`,  
-      html: generatePasswordResetTemplate(`http://localhost:5173/dash/reset-password?token=${newtoken}&id=${user._id}`),
+      html: generatePasswordResetTemplate(`http://localhost:5173/reset-password?token=${newtoken}&id=${user._id}`),
    });
 
    res.status(200).json({message:"Check Your Email To Continue"});
     
 }
 
-const resetPassword =  async (req, res) => {
-    const { password }= req.body;
-    const user= await User.findById(req.user._id)
-    if(!user)    return res.status(400).json({ message: "User not Found" });
-    const isSamePassword =await user.comparePassword(password)
-    if(isSamePassword )return res.status(400).json({ message: "New password cannot be same as old one" });
+const resetPassword = async (req, res) => {
+    try {
+        const { password } = req.body;
+        const user = await User.findById(req.user._id);
+        
+        if (!user) return res.status(400).json({ message: "User not Found" });
+        
+        const isSamePassword = await user.comparePassword(password);
+        if (isSamePassword) return res.status(400).json({ message: "New password cannot be same as old one" });
+        
+        if (!PWD_REGEX.test(password)) return res.status(400).json({ message: `The password must contain at least 8 characters, 1 number, 1 lowercase letter, 1 uppercase letter, 1 special character` });
 
-    if(!PWD_REGEX.test(password)) return res.status(400).json({ message: `The password must contain at least 8 characters,1number,1min,1maj,1special`})
+        const hashedPwd = await bcrypt.hash(password, 10); // salt rounds
+        user.password = hashedPwd;
+        await user.save();
 
-    const hashedPwd = await bcrypt.hash(password, 10) // salt rounds
-    user.password = hashedPwd
-    await user.save()
+        await ResetToken.findOneAndDelete({ owner: user._id });
 
-    await ResetToken.findOneAndDelete({owner: user._id})
-
-    mailTransport().sendMail({
-        to: user.email,    
-        from: `"Reset Password" <resetpassworl@example.com>`, 
-        subject: "Password Reset Successfully ",
-        text: `Hello,\n\nYou are receiving this because you (or someone else) have requested the reset of the password for your account`,  
-        html:plainEmailTemplate("Password Reset Successfully","Now you can login with new password!"),
-     });
-     res.status(200).json({message:'Password has been changed', success: true});
-
+        mailTransport().sendMail({
+            to: user.email,
+            from: `"Reset Password" <resetpassworl@example.com>`,
+            subject: "Password Reset Successfully ",
+            text: `Hello,\n\nYou are receiving this because you (or someone else) have requested the reset of the password for your account`,
+            html: plainEmailTemplate("Password Reset Successfully", "Now you can login with new password!"),
+        });
+        res.status(200).json({ message: 'Password has been changed', success: true });
+    } catch (error) {
+        // Handle error here
+        console.error("Error occurred:", error);
+        res.status(500).json({ message: 'An error occurred while resetting password', success: false });
+    }
 }
+
    
 
 

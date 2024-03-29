@@ -16,7 +16,7 @@ router.route('/logout')
 // sign up
 router.post('/signup', authController.signupUser)
 
-router.post('/verify-email',authController.verifyEmail)
+router.post('/verify-email/:userId',authController.verifyEmail)
 router.post('/forgot-password',authController.forgotPassword)
 router.post('/reset-password',isResetTokenValid,authController.resetPassword)
 router.get('/verify-token',isResetTokenValid, (req,res)=>{
