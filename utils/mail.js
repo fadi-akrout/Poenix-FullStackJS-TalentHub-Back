@@ -79,4 +79,13 @@ exports.plainEmailTemplate=(heading,message)=>{
        </body>
     </html>`
 }
+
+exports.verifyEmail= async (otp, userId)=>{
+    try{
+        const {data} = await client.post('auth/verify-email', {otp, userId});
+        return data;
+    }catch(error){
+        return catchError(error);
+    }
+}
      
