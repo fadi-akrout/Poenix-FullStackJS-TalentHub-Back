@@ -9,12 +9,16 @@ const StaffSchema = new Schema({
     actualPost: { type: String, required: true },
     nbrYearsOfExperience: { type: Number, required: true },
     lastPostOccupied: { type: String, required: true },
-    dateOfBirth: { type: Date, required: true },
+    dateOfBirth: { type: Date },
     address: { type: String },
     city: { type: String },
     postalCode: { type: String },
     country: { type: String },
     phoneNumber: { type: String },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
 
 
 });

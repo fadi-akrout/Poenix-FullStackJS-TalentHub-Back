@@ -5,11 +5,6 @@ const RecruiterSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
     company: {
         type: String,
         required: true
@@ -17,7 +12,11 @@ const RecruiterSchema = new mongoose.Schema({
     phoneNumber: {
         type: Number,
         required: true,
-        unique: true
+        
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
 });
 

@@ -12,7 +12,7 @@ const AlumniSchema = new Schema({
     cv: {
         fileId: { type: Schema.Types.ObjectId, ref: 'CVFile' }
     },
-    dateOfBirth: { type: Date, required: true },
+    dateOfBirth: { type: Date },
     address: { type: String },
     city: { type: String },
     postalCode: { type: String },
@@ -22,8 +22,12 @@ const AlumniSchema = new Schema({
     languages: [{ type: String }],
     linkedinProfile: { type: String },
     profileImage: { type: String },
-    graduationYear: { type: Number, required: true },
-    achievements: [{ type: String }]
+    graduationYear: { type: Number },
+    achievements: [{ type: String }],
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
 });
 
 const Alumni = mongoose.model('Alumni', AlumniSchema);

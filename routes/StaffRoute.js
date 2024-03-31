@@ -29,6 +29,10 @@ router.get('/getstaff/:id', async(req, res) => {
         .then(staffs=>res.json(staffs))
         .catch(err=>res.json(err))
 });
+router.get('/:id', getStaff, (req, res) => {
+    const { staff, hasUserRelation } = res;
+    res.json({ staff, hasUserRelation });
+});
 
 // Update
 router.patch('/:id', async(req, res) => {
@@ -49,5 +53,24 @@ router.delete('/:id', async(req, res) => {
         res.status(500).send(err);
     }
 });
+
+async function getStaff(req, res, next) {
+    let staff;
+    let hasUserRelation= false;
+    try {
+        staff = await Staff.findOne({ user: req.params.id }).populate('user');
+        if (staff == null) {
+            return res.status(404).json({ message: 'Cannot find staff',hasUserRelation });
+            
+        }
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+     hasUserRelation = staff.user !== undefined;
+    res.hasUserRelation = hasUserRelation;
+
+    res.staff = staff;
+    next();
+}
 
 module.exports = router;
