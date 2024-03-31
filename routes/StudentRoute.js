@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+/* router.get('/:id', async (req, res) => {
     try {
         const student = await Student.findById(req.params.id);
         if (!student) {
@@ -31,8 +31,12 @@ router.get('/:id', async (req, res) => {
     } catch (error) {
         res.status(500).send(error);
     }
-});
+}); */
 
+router.get('/:id', getStudent, (req, res) => {
+    const { student, hasUserRelation } = res;
+    res.json({ student, hasUserRelation });
+});
 
 router.patch('/:id', async(req, res) => {
     try {
@@ -55,5 +59,24 @@ router.delete('/:id', async (req, res) => {
         res.status(500).send(error);
     }
 });
+
+async function getStudent(req, res, next) {
+    let student;
+    let hasUserRelation= false;
+    try {
+        student = await Student.findOne({ user: req.params.id }).populate('user');
+        if (student == null) {
+            return res.status(404).json({ message: 'Cannot find student',hasUserRelation });
+            
+        }
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+     hasUserRelation = student.user !== undefined;
+    res.hasUserRelation = hasUserRelation;
+
+    res.student = student;
+    next();
+}
 
 module.exports = router;

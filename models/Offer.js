@@ -20,6 +20,10 @@ const OfferSchema = new mongoose.Schema({
         enum: Object.values(JobType),
       },
     JobCity: String,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+  },
 
 });
 

@@ -6,7 +6,11 @@ const EvenementSchema = new mongoose.Schema({
     dateDebut: { type: Date, required: true },
     dateFin: { type: Date, required: true },
     description: String,
-    image: String
+    image: String,
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
 }, { timestamps: true }); // Ajoute createdAt et updatedAt automatiquement
 
 // Créer le modèle

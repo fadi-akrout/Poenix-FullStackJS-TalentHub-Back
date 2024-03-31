@@ -25,7 +25,8 @@ router.get('/', async(req, res) => {
 
 // GET: Lire un recruteur spécifique par ID
 router.get('/:id', getRecruiter, (req, res) => {
-    res.json(res.recruiter);
+    const { recruiter, hasUserRelation } = res;
+    res.json({ recruiter, hasUserRelation });
 });
 
 // PUT: Mettre à jour un recruteur
@@ -56,14 +57,18 @@ router.delete('/:id', async(req, res) => {
 // Middleware pour obtenir un recruteur par ID
 async function getRecruiter(req, res, next) {
     let recruiter;
+    let hasUserRelation= false;
     try {
-        recruiter = await Recruiter.findById(req.params.id);
+        recruiter = await Recruiter.findOne({ user: req.params.id }).populate('user');
         if (recruiter == null) {
-            return res.status(404).json({ message: 'Cannot find recruiter' });
+            return res.status(404).json({ message: 'Cannot find recruiter',hasUserRelation });
+            
         }
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
+     hasUserRelation = recruiter.user !== undefined;
+    res.hasUserRelation = hasUserRelation;
 
     res.recruiter = recruiter;
     next();

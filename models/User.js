@@ -30,7 +30,11 @@ const userSchema = new Schema({
     type: Boolean,
     required:true,
     default: false
-  }
+  },
+  recruiter: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Recruiter'
+},
                  })
 
 
