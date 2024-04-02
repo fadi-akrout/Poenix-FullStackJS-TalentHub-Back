@@ -4,7 +4,9 @@
     "private": true,
     "scripts": {
         "start": "nodemon ./bin/www",
-        "dev": "nodemon server"
+        "dev": "nodemon server",
+        "build-dev": "webpack --config webpack.dev.js --mode development",
+        "test": "cross-env NODE_ENV='test' mocha --timeout 20000 --exit"
     },
     "dependencies": {
         "bcrypt": "^5.1.1",
