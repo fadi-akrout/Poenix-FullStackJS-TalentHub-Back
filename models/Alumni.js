@@ -23,7 +23,6 @@ const AlumniSchema = new Schema({
     linkedinProfile: { type: String },
     profileImage: { type: String },
     graduationYear: { type: Number },
-    achievements: [{ type: String }],
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
