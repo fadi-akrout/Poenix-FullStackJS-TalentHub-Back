@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Student = require('../models/Student');
 
-router.post('/', async (req, res) => {
+router.post('/', async(req, res) => {
     try {
         const student = new Student(req.body);
         await student.save();
@@ -12,7 +12,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', async(req, res) => {
     try {
         const students = await Student.find();
         res.send(students);
@@ -48,7 +48,7 @@ router.patch('/:id', async(req, res) => {
 });
 
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async(req, res) => {
     try {
         const student = await Student.findByIdAndDelete(req.params.id);
         if (!student) {
@@ -62,21 +62,33 @@ router.delete('/:id', async (req, res) => {
 
 async function getStudent(req, res, next) {
     let student;
-    let hasUserRelation= false;
+    let hasUserRelation = false;
     try {
         student = await Student.findOne({ user: req.params.id }).populate('user');
         if (student == null) {
-            return res.status(404).json({ message: 'Cannot find student',hasUserRelation });
-            
+            return res.status(404).json({ message: 'Cannot find student', hasUserRelation });
+
         }
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
-     hasUserRelation = student.user !== undefined;
+    hasUserRelation = student.user !== undefined;
     res.hasUserRelation = hasUserRelation;
 
     res.student = student;
     next();
 }
+router.get('/a/:id', async(req, res) => {
+    try {
+        const student = await Student.findById(req.params.id).populate('user');
+        if (!student) {
+            return res.status(404).send();
+        }
+        res.send(student);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
 
 module.exports = router;

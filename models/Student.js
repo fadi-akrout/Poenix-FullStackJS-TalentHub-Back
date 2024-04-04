@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const StudentSchema = new Schema({ 
-    name: { type: String, required: true },
-    lastname: { type: String, required: true },
-    email: { type: String, required: true },
-    diploma: { type: String, required: true },
-    actualPost: { type: String, required: true },
-    nbrYearsOfExperience: { type: Number, required: true },
-    lastPostOccupied: { type: String, required: true },
+const StudentSchema = new Schema({
+    name: { type: String },
+    lastname: { type: String },
+    email: { type: String },
+    diploma: { type: String },
+    actualPost: { type: String },
+    nbrYearsOfExperience: { type: Number },
+    lastPostOccupied: { type: String },
     cv: {
         fileId: { type: Schema.Types.ObjectId, ref: 'CVFile' }
     },
