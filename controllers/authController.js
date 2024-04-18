@@ -1,5 +1,5 @@
 const User = require('../models/User')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { generateOTP, mailTransport, createRandomBytes, generatePasswordResetTemplate, plainEmailTemplate } = require('../utils/mail')
 const VerificationToken = require('../models/verificationToken')
