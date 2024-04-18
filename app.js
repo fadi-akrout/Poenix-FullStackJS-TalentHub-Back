@@ -54,7 +54,7 @@ const AlumniRoutes = require('./routes/AlumniRoute');
 
 //const { loggers } = require('./middleware/logger')
 
-const port = process.env.PORT || 3500; // Change 3500 to another port number
+const port = process.env.PORT || 5000; // Change 3500 to another port number
 
 console.log(process.env.NODE_ENV)
 
