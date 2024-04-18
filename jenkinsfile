@@ -76,7 +76,19 @@ stage('Build application') {
      stage('Run application ') {
      steps{  
          script {
+            def backExists = sh(script: 'docker ps -a --filter "name=back" --format "{{.Names}}"', returnStdout: true).trim()
+            def dbExists = sh(script: 'docker ps -a --filter "name=db" --format "{{.Names}}"', returnStdout: true).trim()
+             if (backExists) {
+                sh 'docker stop back'
+                sh 'docker rm back'
+            }
+            if (dbExists) {
+                sh 'docker stop db'
+                sh 'docker rm db'
+            }
+            
            docker.withRegistry("http://"+registry, registryCredentials ) {
+           
 
             sh('docker pull $registry/nodemongoapp:6.0 ')
 
