@@ -18,16 +18,16 @@ pipeline{
       }
     }
 
-/*stage('Unit Test') {
+/* stage('Unit Test') {
       steps{
         
         script {
          sh('npm test')
         }
       }
-    }  */
+    }   */
 
-  /*   stage('SonarQube Analysis') {
+    stage('SonarQube Analysis') {
       steps{
       script {  
                     def scannerHome = tool 'scanner'
@@ -36,7 +36,7 @@ pipeline{
                         }
                 } 
               }  
-            } */
+            } 
 
 stage('Build application') {
       steps{
