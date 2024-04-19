@@ -104,7 +104,7 @@ app.use('/recruiters', recruitersRoutes);
 
 var configDB = require('./mongodb.json');
 //mongo config
-const connect = mongoose.connect(configDB.mongo.uri);
+const connect = mongoose.connect(configDB.mongo.uriDevops);
 
 require('./models/Staff')
 
