@@ -13,6 +13,7 @@ const corsOptions = require('./config/corsOptions')
 const bodyParser = require('body-parser');
 
 const mongoose = require('mongoose');
+const accountStatsRoute = require("./routes/accountStatsRoute");
 
 
 
@@ -91,7 +92,7 @@ app.use('/staff', staffRoute);
 app.use('/offers', offersRoutes)
 
 
-
+app.use('/stat', accountStatsRoute)
 
 app.use('/recruiters', recruitersRoutes);
 
