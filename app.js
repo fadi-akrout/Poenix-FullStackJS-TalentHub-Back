@@ -54,7 +54,7 @@ const AlumniRoutes = require('./routes/AlumniRoute');
 
 //const { loggers } = require('./middleware/logger')
 
-const port = process.env.PORT || 5000; // Change 3500 to another port number
+const port = process.env.PORT || 3500; // Change 3500 to another port number
 
 console.log(process.env.NODE_ENV)
 
@@ -104,7 +104,7 @@ app.use('/recruiters', recruitersRoutes);
 
 var configDB = require('./mongodb.json');
 //mongo config
-const connect = mongoose.connect(configDB.mongo.uriDevops);
+const connect = mongoose.connect(configDB.mongo.uri);
 
 require('./models/Staff')
 
