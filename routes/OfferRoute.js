@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Offer = require('../models/Offer');
+const User = require('../models/User');
+const OfferUser = require('../models/OfferUser');
+const applyToOffer= require('../controllers/applyToOffer')
 
 // Create
 router.post('/', async(req, res) => {
@@ -49,5 +52,7 @@ router.delete('/:id', async(req, res) => {
         res.status(500).send(err);
     }
 });
+
+router.post('/apply/:userId/:offerId', applyToOffer);
 
 module.exports = router;
