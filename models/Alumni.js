@@ -15,15 +15,14 @@ const AlumniSchema = new Schema({
     dateOfBirth: { type: Date },
     address: { type: String },
     city: { type: String },
-    postalCode: { type: String },
-    country: { type: String },
+  
     phoneNumber: { type: String },
     skills: [{ type: String }],
     languages: [{ type: String }],
     linkedinProfile: { type: String },
     profileImage: { type: String },
     graduationYear: { type: Number },
-    achievements: [{ type: String }],
+
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
