@@ -1,26 +1,121 @@
+
 pipeline{
-agent any
-stages {
-stage('Install dependencies') {
-steps{
-script {
-sh('npm install')
-}
-}
-}
-stage('Unit Test') {
-steps{
-script {
-sh('npm test')
-}
-}
-}
+  agent any
+
+  environment {
+        registryCredentials = "nexus"
+        registry = "192.168.50.4:8083"
+    }
+   
+  stages {
+
+  stage('Install dependencies') {
+      steps{
+        
+        script {
+         sh('npm install')
+        }
+      }
+    }
+
+/* stage('Unit Test') {
+      steps{
+        
+        script {
+         sh('npm test')
+        }
+      }
+    }   */
+
+   /*  stage('SonarQube Analysis') {
+      steps{
+      script {  
+                    def scannerHome = tool 'scanner'
+                    withSonarQubeEnv {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                        }
+                } 
+              }  
+            } 
+ */
 stage('Build application') {
-steps{
-script {
-sh('npm run build-dev')
+      steps{
+        
+        script {
+         sh('npm run build-dev')
+        }
+      }
+    }
+
+
+
+        // Building Docker images
+    stage('Building images (node and mongo)') {
+      steps{
+        
+        script {
+         sh('docker-compose build')
+        }
+      }
+    }
+
+
+        //  Uploading Docker images into Nexus Registry
+ stage('Deploy to Nexus') {
+    steps {
+        script {
+            withDockerRegistry([credentialsId: 'nexus', url: "http://${registry}"]) {
+             // sh("echo 'nexus' | docker login -u admin --password-stdin http://192.168.50.4:8083")
+                sh("echo 'nexus' | docker login -u 'admin' --password-stdin 192.168.50.4:8083")
+                sh('docker push $registry/nodemongoapp:6.0')
+            }
+        }
+    }
 }
-}
-}
-}
+
+     stage('Run application ') {
+     steps{  
+         script {
+            def backExists = sh(script: 'docker ps -a --filter "name=back" --format "{{.Names}}"', returnStdout: true).trim()
+            def dbExists = sh(script: 'docker ps -a --filter "name=db" --format "{{.Names}}"', returnStdout: true).trim()
+             if (backExists) {
+                sh 'docker stop back'
+                sh 'docker rm back'
+            }
+            if (dbExists) {
+                sh 'docker stop db'
+                sh 'docker rm db'
+            }
+            
+           docker.withRegistry("http://"+registry, registryCredentials ) {
+           
+
+            sh('docker pull $registry/nodemongoapp:6.0 ')
+
+            sh('docker-compose up -d ')
+          }
+        }
+      }
+    }
+
+     stage("Run Prometheus"){
+      steps{
+ 
+        script{
+
+        sh('docker start prometheus')
+
+        }
+      }
+    }
+     stage("Run Grafana"){ 
+      steps{
+
+        script{
+        sh('docker start grafana')
+        }
+      }
+    }
+  } 
+
 }
