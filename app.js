@@ -17,6 +17,7 @@ const accountStatsRoute = require("./routes/accountStatsRoute");
 
 
 
+
 //const session = require('express-session');
 const app = express();
 app.use(cors({
@@ -51,7 +52,7 @@ var recruitersRoutes = require('./routes/RecruiterRoutes');
 
 const StudentRoutes = require('./routes/StudentRoute');
 const AlumniRoutes = require('./routes/AlumniRoute');
-
+const feedBackRoute = require("./routes/feedBackRoute");
 
 //const { loggers } = require('./middleware/logger')
 
@@ -85,6 +86,7 @@ app.use('/students', StudentRoutes);
 app.use('/alumnis', AlumniRoutes);
 app.use('/evenements', evenementsRoutes);
 app.use('/staff', staffRoute);
+app.use('/api', feedBackRoute);
 
 
 //app.use('/users', usersRoutes)
