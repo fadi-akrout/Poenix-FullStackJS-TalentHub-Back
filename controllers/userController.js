@@ -121,10 +121,31 @@ const deleteUser = asyncHandler(async(req, res) => {
 
     res.json(reply)
 })
+const getFilteredUsers = async (req, res) => {
+    try {
+        // Perform filtering based on criteria, for example, role
+        const { role } = req.query;
+        let filteredUsers;
+
+        if (role) {
+            // Filter users based on role
+            filteredUsers = await User.find({ roles: role });
+        } else {
+            // If no role is specified, return all users
+            filteredUsers = await User.find();
+        }
+
+        res.json(filteredUsers);
+    } catch (error) {
+        console.error('Error fetching filtered users:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
 
 module.exports = {
     getAllUsers,
     createNewUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    getFilteredUsers
 }
