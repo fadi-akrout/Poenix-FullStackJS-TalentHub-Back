@@ -17,14 +17,29 @@ router.post('/', async(req, res) => {
 });
 
 // Read
-router.get('/', async(req, res) => {
+router.get("/", async (req, res) => {
+    try {
+      const { q } = req.query;
+      const fieldNames = ["Title", "Experience_required", "Domain", "Mission", "Speciality", "JobType", "JobCity"]; // Replace with your desired field names
+      const regexQueries = fieldNames.map((fieldName) => ({
+        [fieldName]: { $regex: q, $options: 'i' }
+      }));
+      const query = q ? { $or: regexQueries } : {};
+      const offers = await Offer.find(query);
+      res.json(offers);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "An error occurred" });
+    }
+  });
+/* router.get('/', async(req, res) => {
     try {
         const offers = await Offer.find();
         res.json(offers);
     } catch (err) {
         res.status(500).send(err);
     }
-});
+}); */
 router.get('/getoffer/:id', async(req, res) => {
    
         const id =req.params.id;

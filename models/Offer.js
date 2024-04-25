@@ -22,7 +22,7 @@ const OfferSchema = new mongoose.Schema({
     JobCity: String,
     rating: {
       type: Number,
-      required: true
+      //required: true
     },
     users: [
       {
