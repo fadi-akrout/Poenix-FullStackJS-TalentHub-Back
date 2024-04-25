@@ -1,6 +1,7 @@
 require('dotenv').config()
 require('express-async-errors')
 
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -20,6 +21,7 @@ const accountStatsRoute = require("./routes/accountStatsRoute");
 
 //const session = require('express-session');
 const app = express();
+
 app.use(cors({
     origin: ["http://localhost:5173"],
     methods: ["GET", "PUT", "DELETE", "PATCH", "POST"],
@@ -53,6 +55,7 @@ var recruitersRoutes = require('./routes/RecruiterRoutes');
 const StudentRoutes = require('./routes/StudentRoute');
 const AlumniRoutes = require('./routes/AlumniRoute');
 const feedBackRoute = require("./routes/feedBackRoute");
+const IaCv= require("./routes/IaCv")
 
 //const { loggers } = require('./middleware/logger')
 
@@ -97,7 +100,7 @@ app.use('/offers', offersRoutes)
 app.use('/stat', accountStatsRoute)
 
 app.use('/recruiters', recruitersRoutes);
-
+app.use('/IA', IaCv);
 
 
 
