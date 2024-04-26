@@ -1,6 +1,7 @@
 require('dotenv').config()
 require('express-async-errors')
 
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -13,11 +14,14 @@ const corsOptions = require('./config/corsOptions')
 const bodyParser = require('body-parser');
 
 const mongoose = require('mongoose');
+const accountStatsRoute = require("./routes/accountStatsRoute");
+
 
 
 
 //const session = require('express-session');
 const app = express();
+
 app.use(cors({
     origin: ["http://localhost:5173"],
     methods: ["GET", "PUT", "DELETE", "PATCH", "POST"],
@@ -50,9 +54,12 @@ var recruitersRoutes = require('./routes/RecruiterRoutes');
 
 const StudentRoutes = require('./routes/StudentRoute');
 const AlumniRoutes = require('./routes/AlumniRoute');
+
 const QuestionRoutes = require('./routes/QuestionRoute');
 const ScoreRoutes = require('./routes/ScoreRoute');
 
+const feedBackRoute = require("./routes/feedBackRoute");
+const IaCv = require("./routes/IaCv")
 
 //const { loggers } = require('./middleware/logger')
 
@@ -86,11 +93,13 @@ app.use('/students', StudentRoutes);
 app.use('/alumnis', AlumniRoutes);
 app.use('/evenements', evenementsRoutes);
 app.use('/staff', staffRoute);
+app.use('/api', feedBackRoute);
 
 
 //app.use('/users', usersRoutes)
 //app.use('/api/user', userRoutes)
 app.use('/offers', offersRoutes)
+
 
 app.use('/recruiters', recruitersRoutes);
 
@@ -98,6 +107,10 @@ app.use('/questions', QuestionRoutes);
 app.use('/score', ScoreRoutes);
 
 
+
+app.use('/stat', accountStatsRoute)
+
+app.use('/IA', IaCv);
 
 
 
