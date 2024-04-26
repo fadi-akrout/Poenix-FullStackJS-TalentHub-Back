@@ -54,8 +54,12 @@ var recruitersRoutes = require('./routes/RecruiterRoutes');
 
 const StudentRoutes = require('./routes/StudentRoute');
 const AlumniRoutes = require('./routes/AlumniRoute');
+
+const QuestionRoutes = require('./routes/QuestionRoute');
+const ScoreRoutes = require('./routes/ScoreRoute');
+
 const feedBackRoute = require("./routes/feedBackRoute");
-const IaCv= require("./routes/IaCv")
+const IaCv = require("./routes/IaCv")
 
 //const { loggers } = require('./middleware/logger')
 
@@ -97,9 +101,15 @@ app.use('/api', feedBackRoute);
 app.use('/offers', offersRoutes)
 
 
+app.use('/recruiters', recruitersRoutes);
+
+app.use('/questions', QuestionRoutes);
+app.use('/score', ScoreRoutes);
+
+
+
 app.use('/stat', accountStatsRoute)
 
-app.use('/recruiters', recruitersRoutes);
 app.use('/IA', IaCv);
 
 
@@ -124,6 +134,9 @@ require('./models/User')
 require('./models/Recruiter')
 
 require('./models/Offer')
+require('./models/Question')
+require('./models/Score')
+
 
 
 
