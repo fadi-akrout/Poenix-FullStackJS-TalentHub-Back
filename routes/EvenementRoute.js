@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Evenement = require('../models/Evenement');
-const twilio = require('twilio');
-const accountSid = 'ACe78e17b02f6db96616cebcab40c3982a'; // Remplacez par votre Account SID de Twilio
-const authToken = '3bd0d38d97df9c94e6864518f9f3d95a'; // Remplacez par votre Auth Token de Twilio
-const client = new twilio(accountSid, authToken);
+// const twilio = require('twilio');
+//const accountSid = 'ACe78e17b02f6db96616cebcab40c3982a'; // Remplacez par votre Account SID de Twilio
+//const authToken = '3bd0d38d97df9c94e6864518f9f3d95a'; // Remplacez par votre Auth Token de Twilio
+//const client = new twilio(accountSid, authToken);
 
 // Create
 router.post('/', async(req, res) => {
