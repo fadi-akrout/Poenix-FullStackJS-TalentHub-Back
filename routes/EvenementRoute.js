@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Evenement = require('../models/Evenement');
-
-
 // Create
 router.post('/', async(req, res) => {
     const evenement = new Evenement(req.body);
