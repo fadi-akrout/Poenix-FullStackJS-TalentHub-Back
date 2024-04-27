@@ -11,8 +11,11 @@ const EvenementSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-}, { timestamps: true }); // Ajoute createdAt et updatedAt automatiquement
+    participants: [{ // Nouveau champ pour stocker les participants
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }]
+}, { timestamps: true });
 
-// Créer le modèle
 const Evenement = mongoose.model('Evenement', EvenementSchema);
 module.exports = Evenement;

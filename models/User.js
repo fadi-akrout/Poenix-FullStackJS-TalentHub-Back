@@ -38,7 +38,7 @@ const userSchema = new Schema({
 offers: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'OfferUser'
+      ref: 'Offer'
     }
   ]
                  })

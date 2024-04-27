@@ -2,7 +2,8 @@ const User = require('../models/User')
 const Note = require('../models/Note')
 const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcryptjs')
-
+const Offer = require('../models/Offer');
+const OfferUser = require('../models/OfferUser');
 // @desc Get all users
 // @route GET /users
 // @access Private
@@ -142,10 +143,29 @@ const getFilteredUsers = async (req, res) => {
     }
 };
 
+/* const getOffersByUserId = async (req, res) => {
+    const { userId } = req.params;
+  
+    try {
+      // Find the user by ID
+      const offerUsers = await OfferUser.find({ user: userId }).populate('offer');
+  
+      if (!offerUsers) {
+        return res.status(404).json({ message: 'User does not have offers' });
+      }
+  
+      const offers = offerUsers.map((offerUser) => offerUser.offer);
+      res.json(offerUsers);
+    } catch (error) {
+      console.error('Error fetching offers:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  }; */
+
 module.exports = {
     getAllUsers,
     createNewUser,
     updateUser,
     deleteUser,
-    getFilteredUsers
+    getFilteredUsers,
 }
