@@ -26,11 +26,11 @@ const applyToOffer = async (req, res) => {
     const offerUser = await OfferUser.create(applyObject);
 
     // Add the offerUser reference to the offer and user
-    offer.users.push(offerUser._id);
+    offer.users.push(userId);
     await offer.save();
 
-    user.offers.push(offerUser._id);
-    await user.save();
+   /*  user.offers.push(offerUser._id);
+    await user.save(); */ 
 
     return res.status(200).json({ message: 'User successfully associated with the offer' });
   } catch (error) {
