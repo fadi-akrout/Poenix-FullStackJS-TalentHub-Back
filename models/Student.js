@@ -14,7 +14,6 @@ const StudentSchema = new Schema({
     },
     dateOfBirth: { type: Date },
     address: { type: String },
-    city: { type: String },
    
     phoneNumber: { type: String },
     skills: [{ type: String }],
