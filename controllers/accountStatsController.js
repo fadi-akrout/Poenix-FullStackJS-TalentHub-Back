@@ -7,6 +7,7 @@ const Recruiter = require("../models/Recruiter");
 const Evenement = require("../models/Evenement");
 const Offer = require("../models/Offer")
 
+
 const accountStatsCtrl = expressAsyncHandler(async (req, res) => {
   try {
     // Count documents for various models
@@ -94,3 +95,4 @@ const accountStatsCtrl = expressAsyncHandler(async (req, res) => {
 });
 
 module.exports = accountStatsCtrl;
+
