@@ -59,6 +59,7 @@ const QuestionRoutes = require('./routes/QuestionRoute');
 const ScoreRoutes = require('./routes/ScoreRoute');
 
 const feedBackRoute = require("./routes/feedBackRoute");
+const filterUORoute = require("./routes/filterUORoute");
 const IaCv = require("./routes/IaCv")
 
 //const { loggers } = require('./middleware/logger')
@@ -96,6 +97,7 @@ app.use('/staff', staffRoute);
 app.use('/api', feedBackRoute);
 
 
+
 //app.use('/users', usersRoutes)
 //app.use('/api/user', userRoutes)
 app.use('/offers', offersRoutes)
@@ -109,6 +111,7 @@ app.use('/score', ScoreRoutes);
 
 
 app.use('/stat', accountStatsRoute)
+app.use('/stat', filterUORoute);
 
 app.use('/IA', IaCv);
 
