@@ -6,10 +6,10 @@ const JobType = {
     CONTRACT: 'Contract',
     SUMMER_INTERNSHIP: 'Summer internship',
     PFE: 'PFE',
-  };
+};
 
 const OfferSchema = new mongoose.Schema({
-    Title : String,
+    Title: String,
     Experience_required: String,
     Domain: String,
     Mission: String,
@@ -18,18 +18,21 @@ const OfferSchema = new mongoose.Schema({
     JobType: {
         type: String,
         enum: Object.values(JobType),
-      },
+    },
     JobCity: String,
     rating: {
-      type: Number,
-      //required: true
+        type: Number,
+        //required: true
     },
-    users: [
-      {
+    users: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'OfferUser'
-      }
-    ]
+    }],
+    quiz: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Quiz'
+    }
+
 
 });
 

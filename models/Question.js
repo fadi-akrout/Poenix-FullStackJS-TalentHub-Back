@@ -1,10 +1,12 @@
+// models/Question.js
 const mongoose = require('mongoose');
 
 const questionSchema = new mongoose.Schema({
     questionText: String,
     options: [String],
-    correctOption: Number,
-    score: Number
+    correctOption: Number
 });
 
-module.exports = mongoose.model('Question', questionSchema);
+const Question = mongoose.model('Question', questionSchema);
+
+module.exports = Question;
