@@ -6,15 +6,11 @@ const StudentSchema = new Schema({
     lastname: { type: String },
     email: { type: String },
     diploma: { type: String },
-    actualPost: { type: String },
     nbrYearsOfExperience: { type: Number },
     lastPostOccupied: { type: String },
-    cv: {
-        fileId: { type: Schema.Types.ObjectId, ref: 'CVFile' }
-    },
     dateOfBirth: { type: Date },
     address: { type: String },
-   
+
     phoneNumber: { type: String },
     skills: [{ type: String }],
     languages: [{ type: String }],
