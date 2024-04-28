@@ -10,6 +10,7 @@ const StudentSchema = new Schema({
     lastPostOccupied: { type: String },
     dateOfBirth: { type: Date },
     address: { type: String },
+
     phoneNumber: { type: String },
     skills: [{ type: String }],
     languages: [{ type: String }],
