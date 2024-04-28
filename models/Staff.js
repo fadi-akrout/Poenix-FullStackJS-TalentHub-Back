@@ -8,10 +8,9 @@ const StaffSchema = new Schema({
     email: { type: String },
     diploma: { type: String },
     actualPost: { type: String },
-    nbrYearsOfExperience: { type: Number },
     lastPostOccupied: { type: String },
     dateOfBirth: { type: Date },
-
+    profileImage: { type: String },
     address: { type: String },
     phoneNumber: { type: String },
     user: {

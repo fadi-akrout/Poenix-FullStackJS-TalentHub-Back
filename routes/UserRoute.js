@@ -12,6 +12,7 @@ router.route('/')
     .delete(usersController.deleteUser);
 
 router.get('/filtered', usersController.getFilteredUsers);
+//router.get('/offers/:userId', usersController.getOffersByUserId); // New route for fetching user offers
 module.exports = router
 
 

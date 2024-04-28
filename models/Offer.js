@@ -11,7 +11,7 @@ const JobType = {
 const OfferSchema = new mongoose.Schema({
     Title: String,
     Experience_required: String,
-    Domain: String,
+    Description: String,
     Mission: String,
     Salary: Number,
     Speciality: String,
@@ -26,12 +26,16 @@ const OfferSchema = new mongoose.Schema({
     },
     users: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'OfferUser'
-    }],
+        ref: 'User'
+      }
+    ],
+
+     
     quiz: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Quiz'
     }
+
 
 
 });
