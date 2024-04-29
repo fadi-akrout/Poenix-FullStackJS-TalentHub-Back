@@ -3,8 +3,8 @@ const router = express.Router();
 const Offer = require('../models/Offer');
 const User = require('../models/User');
 const OfferUser = require('../models/OfferUser');
-const {applyToOffer} = require('../controllers/applyToOffer')
-const { acceptCandidate } = require('../controllers/applyToOffer');
+const {applyToOffer,acceptCandidate,getAcceptedUsers} = require('../controllers/applyToOffer')
+
 
 const Quiz = require('../models/Quiz');
 
@@ -50,6 +50,23 @@ router.get('/offerOwner/:userId', async (req, res) => {
         res.status(500).send(err);
     }
 });
+/* router.get('/acceptedList/:userId', async (req, res) => {
+    const userId = req.params.userId;
+
+    try {
+        // Find the user by ID and populate the 'offers' field
+        const user = await User.findById(userId).populate('offers');
+        
+        if (!user) {
+            return res.status(404).send({ message: "User not found" });
+        }
+        const offerIds = user.offers.map(offer => offer._id);
+        const offerUser = await OfferUser.findOne({ user: userId, offer: user._id });
+        res.send(user.offers);
+    } catch (err) {
+        res.status(500).send(err);
+    }
+}); */
 router.get('/userList/:offerId', async (req, res) => {
     const { offerId } = req.params;
 
@@ -117,28 +134,8 @@ const getOffersByUserId = async (req, res) => {
   };
 router.get('/user/:userId', getOffersByUserId);
 
-/* const getOffersByOwnerId = async (req, res) => {
-    const { userId } = req.params;
-  
-    try {
-      // Find the user by ID
-      const offerUsers = await User.find({ user: userId }).populate('offer');
-  
-      if (!offerUsers || offerUsers.length === 0) {
-        return res.status(404).json({ message: 'User does not have offers' });
-      }
-  
-      const offers = offerUsers.map((offerUser) => offerUser.offer);
-      res.json(offers);
-    } catch (error) {
-      console.error('Error fetching offers:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  };
-router.get('/owner/:userId', getOffersByOwnerId); */
-
-// Route for accepting a candidate
 router.put('/accept/:offerId/users/:userId', acceptCandidate);
+router.get('/acceptedList/:offerId', getAcceptedUsers);
 
 
 // Update
