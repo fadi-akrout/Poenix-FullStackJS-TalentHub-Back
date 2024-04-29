@@ -15,6 +15,8 @@ const OfferSchema = new mongoose.Schema({
     Mission: String,
     Salary: Number,
     Speciality: String,
+    profileImage: { type: String },
+
     JobType: {
         type: String,
         enum: Object.values(JobType),
