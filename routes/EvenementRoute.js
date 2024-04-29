@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Evenement = require('../models/Evenement');
+const User = require('../models/User')
+
+const { generateOTP, mailTransport, createRandomBytes, generatePasswordResetTemplate, plainEmailTemplate } = require('../utils/mail')
+
 // Create
 router.post('/', async(req, res) => {
     const evenement = new Evenement(req.body);
@@ -44,22 +48,50 @@ router.delete('/:id', async(req, res) => {
 
 // Exemple d'une route dans Express pour participer à un événement
 router.post('/:id/participate', async(req, res) => {
-    const { userId } = req.body; // Assurez-vous que l'ID de l'utilisateur est envoyé dans le corps de la requête
-    const { id } = req.params; // ID de l'événement
+    const { userId } = req.body;
+    const { id } = req.params;
 
     try {
-        const evenement = await Evenement.findById(id);
-        if (!evenement.participants.includes(userId)) {
-            evenement.participants.push(userId); // Ajouter l'utilisateur à la liste des participants
-            await evenement.save();
-            res.status(200).json({ message: 'Participation enregistrée' });
+        const event = await Evenement.findById(id);
+        const user = await User.findById(userId); // Assuming User model exists and userId is valid
+        if (!event) return res.status(404).json({ message: "Event not found" });
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        if (!event.participants.includes(userId)) {
+            event.participants.push(userId);
+            await event.save();
+
+            // Define your HTML template here
+            const htmlContent = `
+                <html>
+                <body>
+                    <h1>Event Participation Confirmation</h1>
+                    <p>Dear ${user.username},</p>
+                    <p>You have successfully registered for the event: ${event.nom}.</p>
+                    <p>Event Date: ${event.dateDebut}</p>
+                    <p>If you have any questions, you can contact us at any time.</p>
+                </body>
+                </html>
+            `;
+
+            // Send the email using your mailTransport function
+            await mailTransport().sendMail({
+                to: user.email,
+                from: `"Event Participation" <sarah.ranmori@gmail.com>`,
+                subject: `Participation confirmed for event: ${event.nom}`,
+                html: htmlContent
+            });
+
+            //  res.status(200).json({ message: 'Participation recorded successfully' });
         } else {
-            res.status(400).json({ message: 'Vous participez déjà à cet événement' });
+            res.status(400).json({ message: 'User is already registered for this event' });
         }
     } catch (error) {
+        console.error('Error during participation:', error);
         res.status(500).json({ message: error.message });
     }
 });
+
 router.post('/:id/annulerParticipation', async(req, res) => {
     const { userId } = req.body; // Assurez-vous que l'ID de l'utilisateur est envoyé dans le corps de la requête
     const { id } = req.params; // ID de l'événement
