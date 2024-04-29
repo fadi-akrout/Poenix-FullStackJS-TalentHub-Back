@@ -3,7 +3,8 @@ const router = express.Router();
 const Offer = require('../models/Offer');
 const User = require('../models/User');
 const OfferUser = require('../models/OfferUser');
-const applyToOffer = require('../controllers/applyToOffer')
+const {applyToOffer} = require('../controllers/applyToOffer')
+const { acceptCandidate } = require('../controllers/applyToOffer');
 
 const Quiz = require('../models/Quiz');
 
@@ -135,6 +136,10 @@ router.get('/user/:userId', getOffersByUserId);
     }
   };
 router.get('/owner/:userId', getOffersByOwnerId); */
+
+// Route for accepting a candidate
+router.put('/accept/:offerId/users/:userId', acceptCandidate);
+
 
 // Update
 router.patch('/:id', async(req, res) => {

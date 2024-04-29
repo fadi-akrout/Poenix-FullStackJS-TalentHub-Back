@@ -39,4 +39,30 @@ const applyToOffer = async (req, res) => {
   }
 };
 
-module.exports = applyToOffer;
+const acceptCandidate = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const offerId = req.params.offerId;
+
+    // Find the OfferUser by user and offer IDs
+    const offerUser = await OfferUser.findOne({ user: userId, offer: offerId });
+
+    if (!offerUser) {
+      return res.status(404).json({ error: 'User has not applied to this offer' });
+    }
+
+    if (offerUser.status) {
+      return res.status(400).json({ error: 'Candidate has already been accepted' });
+    }
+
+    offerUser.status = true;
+    await offerUser.save();
+
+    return res.status(200).json({ message: 'Candidate has been accepted for this offer' });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports = {applyToOffer,acceptCandidate};
