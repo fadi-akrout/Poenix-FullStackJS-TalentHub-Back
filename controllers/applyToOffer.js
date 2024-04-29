@@ -56,6 +56,7 @@ const acceptCandidate = async (req, res) => {
     }
 
     offerUser.status = true;
+    offerUser.accepted.push(userId);
     await offerUser.save();
 
     return res.status(200).json({ message: 'Candidate has been accepted for this offer' });
@@ -65,4 +66,19 @@ const acceptCandidate = async (req, res) => {
   }
 };
 
-module.exports = {applyToOffer,acceptCandidate};
+const getAcceptedUsers = async (req,res) => {
+  const { offerId } = req.params;
+  try {
+    const offerUsers = await OfferUser.find({ offer: offerId }).populate('accepted');
+    if(!offerUsers){
+      return res.status(404).json({ error: 'No User has been accepted to this offer' });
+    }
+    const acceptedUsers = offerUsers.map(offerUser => offerUser.accepted);
+    res.json(acceptedUsers);
+  } catch (error) {
+    console.error(error.message);
+    throw new Error('Failed to retrieve accepted users');
+  }
+};
+
+module.exports = {applyToOffer,acceptCandidate,getAcceptedUsers};

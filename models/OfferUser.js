@@ -14,7 +14,11 @@ const OfferUserSchema = new mongoose.Schema({
   status: {
     type: Boolean,
     default: false
-  }
+  },
+  accepted: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }]
 });
 
 const OfferUser = mongoose.model('OfferUser', OfferUserSchema);
