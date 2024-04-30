@@ -19,7 +19,7 @@ const applyToOffer = async (req, res) => {
     // Check if the user is already associated with the offer
     const existingOfferUser = await OfferUser.findOne({ user: userId, offer: offerId });
     if (existingOfferUser) {
-      return res.status(400).json({ error: 'User is already associated with this offer' });
+      return res.status(400).json({ error: 'You have already applied to this offer' });
     }
 
     const applyObject = { offer: offerId, user: userId };
