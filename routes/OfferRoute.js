@@ -3,7 +3,7 @@ const router = express.Router();
 const Offer = require('../models/Offer');
 const User = require('../models/User');
 const OfferUser = require('../models/OfferUser');
-const {applyToOffer,acceptCandidate,getAcceptedUsers} = require('../controllers/applyToOffer')
+const { applyToOffer, acceptCandidate, getAcceptedUsers } = require('../controllers/applyToOffer')
 
 
 const Quiz = require('../models/Quiz');
@@ -22,8 +22,7 @@ router.post('/', async(req, res) => {
 
         // Find the user by ID and update the offers array
         await User.findByIdAndUpdate(
-            userId,
-            { $push: { offers: savedOffer._id } }, // Add the offer ID to the user's offers array
+            userId, { $push: { offers: savedOffer._id } }, // Add the offer ID to the user's offers array
             { new: true } // Return the updated user object
         );
 
@@ -34,13 +33,13 @@ router.post('/', async(req, res) => {
     }
 });
 
-router.get('/offerOwner/:userId', async (req, res) => {
+router.get('/offerOwner/:userId', async(req, res) => {
     const userId = req.params.userId;
 
     try {
         // Find the user by ID and populate the 'offers' field
         const user = await User.findById(userId).populate('offers');
-        
+
         if (!user) {
             return res.status(404).send({ message: "User not found" });
         }
@@ -67,7 +66,7 @@ router.get('/offerOwner/:userId', async (req, res) => {
         res.status(500).send(err);
     }
 }); */
-router.get('/userList/:offerId', async (req, res) => {
+router.get('/userList/:offerId', async(req, res) => {
     const { offerId } = req.params;
 
     try {
@@ -114,24 +113,24 @@ router.get('/getoffer/:id', async(req, res) => {
         .then(offers => res.json(offers))
         .catch(err => res.json(err))
 });
-const getOffersByUserId = async (req, res) => {
+const getOffersByUserId = async(req, res) => {
     const { userId } = req.params;
-  
+
     try {
-      // Find the user by ID
-      const offerUsers = await OfferUser.find({ user: userId }).populate('offer');
-  
-      if (!offerUsers || offerUsers.length === 0) {
-        return res.status(404).json({ message: 'User does not have offers' });
-      }
-  
-      const offers = offerUsers.map((offerUser) => offerUser.offer);
-      res.json(offers);
+        // Find the user by ID
+        const offerUsers = await OfferUser.find({ user: userId }).populate('offer');
+
+        if (!offerUsers || offerUsers.length === 0) {
+            return res.status(404).json({ message: 'User does not have offers' });
+        }
+
+        const offers = offerUsers.map((offerUser) => offerUser.offer);
+        res.json(offers);
     } catch (error) {
-      console.error('Error fetching offers:', error);
-      res.status(500).json({ message: 'Internal server error' });
+        console.error('Error fetching offers:', error);
+        res.status(500).json({ message: 'Internal server error' });
     }
-  };
+};
 router.get('/user/:userId', getOffersByUserId);
 
 router.put('/accept/:offerId/users/:userId', acceptCandidate);
@@ -149,27 +148,27 @@ router.patch('/:id', async(req, res) => {
 });
 
 // Delete
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async(req, res) => {
     try {
-      const offer = await Offer.findById(req.params.id);
-      if (!offer) {
-        return res.status(404).send({ error: "Offer not found" });
-      }
-  
-      // Check if the offer has associated users
-      const usersCount = await User.countDocuments({ offer: offer._id });
-      if (usersCount > 0) {
-        return res.status(400).send({ error: "Offer has associated users and cannot be deleted" });
-      }
-  
-      // If no associated users, proceed with deletion
-      await Offer.findByIdAndDelete(req.params.id);
-      res.status(204).send();
+        const offer = await Offer.findById(req.params.id);
+        if (!offer) {
+            return res.status(404).send({ error: "Offer not found" });
+        }
+
+        // Check if the offer has associated users
+        const usersCount = await User.countDocuments({ offer: offer._id });
+        if (usersCount > 0) {
+            return res.status(400).send({ error: "Offer has associated users and cannot be deleted" });
+        }
+
+        // If no associated users, proceed with deletion
+        await Offer.findByIdAndDelete(req.params.id);
+        res.status(204).send();
     } catch (err) {
-      res.status(500).send(err);
+        res.status(500).send(err);
     }
-  });
-  
+});
+
 
 router.post('/:id/quiz', async(req, res) => {
     try {
@@ -197,7 +196,31 @@ router.post('/:id/quiz', async(req, res) => {
         res.status(500).json({ message: 'Server error', error });
     }
 });
+router.get('/quiz/:offerId', async(req, res) => {
+    const { offerId } = req.params;
+    try {
+        // First, find the offer with the quiz populated
+        const offer = await Offer.findById(offerId).populate({
+            path: 'quiz',
+            populate: { path: 'questions' } // Further populate the questions of the quiz
+        });
 
+        if (!offer) {
+            return res.status(404).json({ message: 'Offer not found' });
+        }
+
+        // Check if the quiz exists on the offer
+        if (!offer.quiz) {
+            return res.status(404).json({ message: 'No quiz associated with this offer' });
+        }
+
+        // Send the entire quiz along with populated questions
+        res.json(offer.quiz);
+    } catch (error) {
+        console.error('Error fetching quiz:', error);
+        res.status(500).json({ message: 'Server error', error });
+    }
+});
 
 
 router.post('/apply/:userId/:offerId', applyToOffer);
