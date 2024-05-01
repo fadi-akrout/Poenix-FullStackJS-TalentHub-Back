@@ -60,6 +60,7 @@ const ScoreRoutes = require('./routes/ScoreRoute');
 
 const feedBackRoute = require("./routes/feedBackRoute");
 const IaCv = require("./routes/IaCv")
+const QuizResultRoute = require('./routes/QuizResultRoute');
 
 //const { loggers } = require('./middleware/logger')
 
@@ -113,6 +114,7 @@ app.use('/stat', accountStatsRoute)
 
 
 app.use('/IA', IaCv);
+app.use('/Result', QuizResultRoute);
 
 
 
@@ -138,6 +140,7 @@ require('./models/Recruiter')
 require('./models/Offer')
 require('./models/Question')
 require('./models/Score')
+require('./models/QuizResult')
 
 
 

@@ -53,7 +53,7 @@ router.post('/:id/participate', async(req, res) => {
 
     try {
         const event = await Evenement.findById(id);
-        const user = await User.findById(userId); // Assuming User model exists and userId is valid
+        const user = await User.findById(userId);
         if (!event) return res.status(404).json({ message: "Event not found" });
         if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -61,7 +61,6 @@ router.post('/:id/participate', async(req, res) => {
             event.participants.push(userId);
             await event.save();
 
-            // Define your HTML template here
             const htmlContent = `
                 <html>
                 <body>
@@ -74,7 +73,6 @@ router.post('/:id/participate', async(req, res) => {
                 </html>
             `;
 
-            // Send the email using your mailTransport function
             await mailTransport().sendMail({
                 to: user.email,
                 from: `"Event Participation" <sarah.ranmori@gmail.com>`,
@@ -82,7 +80,7 @@ router.post('/:id/participate', async(req, res) => {
                 html: htmlContent
             });
 
-            //  res.status(200).json({ message: 'Participation recorded successfully' });
+            res.status(200).json({ message: 'Participation recorded successfully' });
         } else {
             res.status(400).json({ message: 'User is already registered for this event' });
         }
@@ -91,6 +89,7 @@ router.post('/:id/participate', async(req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
 
 router.post('/:id/annulerParticipation', async(req, res) => {
     const { userId } = req.body; // Assurez-vous que l'ID de l'utilisateur est envoyé dans le corps de la requête
