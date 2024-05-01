@@ -8,9 +8,18 @@ router.get('/api/questions', async(req, res) => {
 });
 
 router.post('/api/questions', async(req, res) => {
+    try {
+    // Check if the question is empty
+    if (!req.body.questionText ||  !req.body.options ||  !req.body.correctOption ) {
+        return res.status(400).json({ error: 'Question cannot be empty' });
+      }
     const newQuestion = new Question(req.body);
     const savedQuestion = await newQuestion.save();
     res.status(201).json(savedQuestion);
+} catch (error) {
+      // Handle any errors that occur during the process
+      res.status(500).json({ error: 'An error occurred while saving the question' });
+    }
 });
 
 router.get('/api/:quizId/questions', async(req, res) => {
