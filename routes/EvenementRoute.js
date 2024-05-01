@@ -62,15 +62,26 @@ router.post('/:id/participate', async(req, res) => {
             await event.save();
 
             const htmlContent = `
-                <html>
-                <body>
-                    <h1>Event Participation Confirmation</h1>
-                    <p>Dear ${user.username},</p>
-                    <p>You have successfully registered for the event: ${event.nom}.</p>
-                    <p>Event Date: ${event.dateDebut}</p>
-                    <p>If you have any questions, you can contact us at any time.</p>
-                </body>
-                </html>
+            <html>
+
+            <body style="background-image: url('https://esprittncom-my.sharepoint.com/:i:/r/personal/amir_laroussi_esprit_tn/Documents/vecteezy_vector-abstract-background-with-soft-gradient-color-and_6849053.jpg'); background-size: cover;">
+              <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                <img src="https://esprittncom-my.sharepoint.com/:i:/r/personal/amir_laroussi_esprit_tn/Documents/talenthublogo.png" alt="Logo" style="max-width: 200px; margin-bottom: 20px;">
+            
+                <h1>Event Participation Confirmation</h1>
+                <p>Dear ${user.username},</p>
+                <p>You have successfully registered for the event: ${event.nom}.</p>
+                <p >Event Date: ${event.dateDebut}</p>
+                <p>If you have any questions, you can contact us at any time.</p>
+                <br>
+                <p style="font-size: 18px;">Talent Hub</p>
+                <p style="font-size: 16px;">Address: Esprit</p>
+                <p style="font-size: 16px;">Email: TalentHub@esprit.tn</p>
+                <p style="font-size: 16px;">Phone: +0123 4567 8910</p>
+              </div>
+            </body>
+            
+            </html>
             `;
 
             await mailTransport().sendMail({
