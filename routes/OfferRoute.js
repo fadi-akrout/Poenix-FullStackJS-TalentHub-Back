@@ -170,32 +170,42 @@ router.delete('/:id', async(req, res) => {
 });
 
 
-router.post('/:id/quiz', async(req, res) => {
+router.post('/quiz/:id', async (req, res) => {
     try {
-        const { id } = req.params;
-        const { title, questions } = req.body; // Assurez-vous que 'questions' est un tableau d'IDs de questions
-
-        // Création d'un nouveau quiz
-        const newQuiz = new Quiz({
-            offer: id,
-            title: title,
-            questions: questions // Ici, 'questions' doit être un tableau d'IDs
-        });
-
-        // Sauvegarde du quiz dans la base de données
-        const savedQuiz = await newQuiz.save();
-
-        // Association du quiz à l'offre spécifique
-        const offer = await Offer.findById(id);
-        offer.quiz = savedQuiz._id;
-        await offer.save();
-
-        res.status(201).json(savedQuiz);
+      const { id } = req.params;
+      const { title, questions } = req.body;
+  
+      // Check if a quiz already exists for the offer
+      const existingQuiz = await Quiz.findOne({ offer: id });
+      if (existingQuiz) {
+        // Update the existing quiz
+        existingQuiz.title = title;
+        existingQuiz.questions = questions;
+        const updatedQuiz = await existingQuiz.save();
+        return res.status(200).json(updatedQuiz);
+      }
+  
+      // Create a new quiz
+      const newQuiz = new Quiz({
+        offer: id,
+        title: title,
+        questions: questions,
+      });
+  
+      // Save the new quiz in the database
+      const savedQuiz = await newQuiz.save();
+  
+      // Associate the quiz with the specific offer
+      const offer = await Offer.findById(id);
+      offer.quiz = savedQuiz._id;
+      await offer.save();
+  
+      res.status(201).json(savedQuiz);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error', error });
+      console.error(error);
+      res.status(500).json({ message: 'Server error', error });
     }
-});
+  });
 router.get('/quiz/:offerId', async(req, res) => {
     const { offerId } = req.params;
     try {
