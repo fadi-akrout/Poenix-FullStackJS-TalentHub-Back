@@ -157,7 +157,18 @@ const signupUser = async (req, res) => {
             from: `Amir Laroussi <amirlaroussi2023@gmail.com>`, 
             subject: 'Please verify your account on our website',
             text: `Hello ${username},\n\nThank you for registering with us.\n\nPlease confirm your account `,
-            html:  `<h1>${OTP}</h1>`,
+            html:  `  <div style="text-align: center; background-image: url('https://esprittncom-my.sharepoint.com/:i:/r/personal/amir_laroussi_esprit_tn/Documents/vecteezy_vector-abstract-background-with-soft-gradient-color-and_6849053.jpg'); background-size: cover;">
+            <img src="https://esprittncom-my.sharepoint.com/:i:/r/personal/amir_laroussi_esprit_tn/Documents/talenthublogo.png" alt="Talent Hub Logo" style="width: 200px;">
+            <h1 style="color: red;">${OTP}</h1>
+            <p style="font-size: 18px;">Hello ${username},</p>
+            <p style="font-size: 18px;">Thank you for registering with us.</p>
+            <p style="font-size: 18px;">Please confirm your account.</p>
+            <br>
+            <p style="font-size: 18px;">Talent Hub</p>
+            <p style="font-size: 16px;">Address: Esprit</p>
+            <p style="font-size: 16px;">Email: TalentHub@esprit.tn</p>
+            <p style="font-size: 16px;">Phone: +0123 4567 8910</p>
+          </div>`,
            
         });
 
@@ -232,9 +243,20 @@ const verifyEmail =  async (req, res) => {
    mailTransport().sendMail({
     to: user.email,  
     from: `Amir Laroussi <amirlaroussi2023@gmail.com>`, 
-    subject: 'Please verify your account on our website',
-    text: `Hello,\n\nThank you for registering with us.\n\nYour account has been confirmed, Enjoy ! `,
-    html:  `<h1>Email Verified Successfully thanks for connecting with us</h1>`,
+    subject: 'Account Verification',
+    text: `Hello,\n\nThank you ${user.username} for registering with us.\n\nYour account has been confirmed, Enjoy ! `,
+    html:  `    <div style="text-align: center; background-image: url('https://esprittncom-my.sharepoint.com/:i:/r/personal/amir_laroussi_esprit_tn/Documents/vecteezy_vector-abstract-background-with-soft-gradient-color-and_6849053.jpg'); background-repeat: no-repeat; background-size: cover;">
+    <img src="https://esprittncom-my.sharepoint.com/:i:/r/personal/amir_laroussi_esprit_tn/Documents/talenthublogo.png" alt="TalentHub Logo" style="width: 200px; height: auto;">
+    <h1 style="color: #333;">Email Verified Successfully</h1>
+    <p style="font-size: 18px;">Hello ${user.username},</p>
+    <p style="font-size: 18px;">Thank you for registering with us.</p>
+    <p style="font-size: 18px;">Your account has been confirmed. Enjoy your journey on our website!</p>
+    <br>
+    <p style="font-size: 18px;">Talent Hub</p>
+    <p style="font-size: 16px;">Address: Esprit</p>
+    <p style="font-size: 16px;">Email: TalentHub@esprit.tn</p>
+    <p style="font-size: 16px;">Phone: +0123 4567 8910</p>
+  </div>`,
    
 });
 res.json({
@@ -304,7 +326,7 @@ const resetPassword = async (req, res) => {
             from: `"Reset Password" <resetpassworl@example.com>`,
             subject: "Password Reset Successfully ",
             text: `Hello,\n\nYou are receiving this because you (or someone else) have requested the reset of the password for your account`,
-            html: plainEmailTemplate("Password Reset Successfully", "Now you can login with new password!"),
+            html: plainEmailTemplate(`${user.username}`,"Password Reset Successfully", "Now you can login with new password!"),
         });
         res.status(200).json({ message: 'Password has been changed', success: true });
     } catch (error) {
