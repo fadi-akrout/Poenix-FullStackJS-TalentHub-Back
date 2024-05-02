@@ -28,41 +28,22 @@ router.post('/feedback', async (req, res) => {
     }
 });
 
-// GET method to fetch feedback statistics
-router.get('/feedback/stats', async (req, res) => {
+// GET method to fetch existing feedback for an offer ID
+router.get('/feedback/:offerId', async (req, res) => {
     try {
-      // Fetch all feedback entries and populate the user information
-      const feedbackData = await FeedBack.find().populate('user', 'username');
-  
-      // Construct the data array with user and rating information
-      const stats = feedbackData.map((feedback) => ({
-        _id: feedback._id,
-        user: feedback.user.username,
-        rating: feedback.rating,
-      }));
-  
-      res.status(200).json(stats);
+        const offerId = req.params.offerId;
+
+        // Find existing feedback for the given offer ID
+        const existingFeedback = await FeedBack.findOne({ offerId });
+
+        if (!existingFeedback) {
+            return res.status(404).send("No feedback found for this offer.");
+        }
+
+        res.status(200).send(existingFeedback);
     } catch (err) {
-      res.status(500).json({ error: err.message });
+        res.status(500).send(err);
     }
-  });
-  
-  // GET method to fetch existing feedback for an offer ID
-  router.get('/feedback/:offerId', async (req, res) => {
-      try {
-          const offerId = req.params.offerId;
-  
-          // Find existing feedback for the given offer ID
-          const existingFeedback = await FeedBack.findOne({ offerId });
-  
-          if (!existingFeedback) {
-              return res.status(404).send("No feedback found for this offer.");
-          }
-  
-          res.status(200).send(existingFeedback);
-      } catch (err) {
-          res.status(500).send(err);
-      }
-  });
+});
 
 module.exports = router;
