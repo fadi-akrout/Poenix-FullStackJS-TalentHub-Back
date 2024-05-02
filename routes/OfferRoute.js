@@ -7,7 +7,7 @@ const { applyToOffer, acceptCandidate, getAcceptedUsers } = require('../controll
 
 
 const Quiz = require('../models/Quiz');
-
+const QuizResult = require('../models/QuizResult');
 // Create
 router.post('/', async(req, res) => {
     // Extract offer data from request body
@@ -206,10 +206,19 @@ router.post('/quiz/:id', async (req, res) => {
       res.status(500).json({ message: 'Server error', error });
     }
   });
-router.get('/quiz/:offerId', async(req, res) => {
+  router.get('/quiz/:offerId', async (req, res) => {
     const { offerId } = req.params;
+    const userId = req.headers['user-id']; // Assuming you have the authenticated user's ID available
+
     try {
-        // First, find the offer with the quiz populated
+        // First, check if a quiz result already exists for this user and offer
+        const existingQuizResult = await QuizResult.findOne({ user: userId, offer: offerId });
+        if (existingQuizResult) {
+            return res.status(400).json({ message: 'You have already taken the quiz for this offer' });
+           
+        }
+
+        // Find the offer with the quiz populated
         const offer = await Offer.findById(offerId).populate({
             path: 'quiz',
             populate: { path: 'questions' } // Further populate the questions of the quiz
@@ -221,7 +230,7 @@ router.get('/quiz/:offerId', async(req, res) => {
 
         // Check if the quiz exists on the offer
         if (!offer.quiz) {
-            return res.status(404).json({ message: 'No quiz associated with this offer' });
+            return res.status(401).json({ message: 'No quiz associated with this offer' });
         }
 
         // Send the entire quiz along with populated questions
