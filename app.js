@@ -124,7 +124,7 @@ app.use('/Result', QuizResultRoute);
 
 var configDB = require('./mongodb.json');
 //mongo config
-const connect = mongoose.connect(configDB.mongo.uriDevops);
+const connect = mongoose.connect(configDB.mongo.uri);
 
 require('./models/Staff')
 
