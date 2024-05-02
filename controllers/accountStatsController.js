@@ -6,6 +6,7 @@ const Alumni = require("../models/Alumni");
 const Recruiter = require("../models/Recruiter");
 const Evenement = require("../models/Evenement");
 const Offer = require("../models/Offer")
+const FeedBack = require("../models/FeedBack")
 
 
 const accountStatsCtrl = expressAsyncHandler(async (req, res) => {
